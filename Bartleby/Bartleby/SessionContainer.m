@@ -30,6 +30,7 @@
         // Set ourselves as the MCSessionDelegate
         _session.delegate = self;
         // Create the advertiser assistant for managing incoming invitation
+        _sessionTranscripts = [NSMutableArray new]; 
         _advertiserAssistant = [[MCAdvertiserAssistant alloc] initWithServiceType:serviceType discoveryInfo:nil session:_session];
         // Start the assistant to begin advertising your peers availability
         [_advertiserAssistant start];

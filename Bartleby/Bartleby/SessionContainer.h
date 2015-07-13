@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSString *conversationDisplayName;
 @property (readonly, nonatomic) MCSession *session;
 @property (assign, nonatomic) id<SessionContainerDelegate> delegate;
+@property (retain, nonatomic) NSMutableArray *sessionTranscripts;
 
 // Designated initializer
 - (id)initWithDisplayName:(NSString *)displayName serviceType:(NSString *)serviceType;

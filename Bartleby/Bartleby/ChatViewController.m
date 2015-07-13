@@ -47,13 +47,7 @@
     _transcripts = [NSMutableArray new];
     _imageNameIndex = [NSMutableDictionary new];
     
-    // Get the display name and service type from the previous session (if any)
-    self.sessionContainer = [DataSource sharedInstance].currentConversation;
-    self.sessionContainer.delegate = self;
-    self.displayName = [DataSource sharedInstance].currentConversation.conversationDisplayName;
-    self.serviceType = [DataSource sharedInstance].serviceType; 
 
-    self.navigationItem.title = self.displayName;
 
 }
 
@@ -62,12 +56,24 @@
     // Listen for will show/hide notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    // Get the display name and service type from the previous session (if any)
+    self.sessionContainer = [DataSource sharedInstance].currentConversation;
+    self.sessionContainer.delegate = self;
+    self.displayName = [DataSource sharedInstance].currentConversation.conversationDisplayName;
+    self.serviceType = [DataSource sharedInstance].serviceType;
+    
+    self.navigationItem.title = self.displayName;
+    
+    self.transcripts = self.sessionContainer.sessionTranscripts;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     // Stop listening for keyboard notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts; 
 }
 
 
