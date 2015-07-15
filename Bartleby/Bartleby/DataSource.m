@@ -9,6 +9,12 @@
 #import "DataSource.h"
 #import "SessionContainer.h"
 
+@interface DataSource () <MCNearbyServiceAdvertiserDelegate, UIAlertViewDelegate> {
+    NSMutableArray *_activeConversations;
+}
+
+@end
+
 @implementation DataSource
 
 + (instancetype) sharedInstance {
@@ -25,55 +31,101 @@
     
     if (self) {
         self.serviceType = @"bartleby-chat";
-        self.userName = [[UIDevice currentDevice] name];
+        self.userID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
         self.activeConversations = [NSMutableArray new];
-        //[self addRandomData];
+        
+        self.availablePeers = [NSMutableArray new];
+        self.connectedPeers = [NSMutableArray new];
+        
+        self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.userID discoveryInfo:nil serviceType:self.serviceType];
+        self.advertiser.delegate = self;
+        [self.advertiser startAdvertisingPeer];
         
     }
     
     return self;
 }
 
-- (void) addRandomData {
-    
-    for (int i = 1; i < 10; i++) {
-        
-        SessionContainer *newSession = [self randomSession];
-        
-        [self.activeConversations addObject:newSession];
-        
-    }
-    
-}
 
-- (SessionContainer *) randomSession {
+- (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID {
     
-    NSString *userName = [self randomStringOfLength:(arc4random_uniform(6) + 4)];
-
-    SessionContainer *randomsesh = [[SessionContainer alloc] initWithDisplayName:userName serviceType:self.serviceType];
-    
-    return randomsesh;
-}
-
-- (SessionContainer *) createNewSessionWithName:(NSString *)name {
-    
-    SessionContainer *newSession = [[SessionContainer alloc] initWithDisplayName:name serviceType:self.serviceType];
-    [self.activeConversations addObject:newSession];
+    SessionContainer *newSession = [[SessionContainer alloc] initWithPeerID:self.userID serviceType:self.serviceType];
     return newSession;
 }
 
 
-- (NSString *) randomStringOfLength:(NSUInteger) len {
-    NSString *alphabet = @"abcdefghijklmnopqrstuvwxyz";
+#pragma mark - Advertiser Delegate
+
+- (void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void(^)(BOOL accept, MCSession *session))invitationHandler {
     
-    NSMutableString *s = [NSMutableString string];
-    for (NSUInteger i = 0; i < len; i++) {
-        u_int32_t r = arc4random_uniform((u_int32_t)[alphabet length]);
-        unichar c = [alphabet characterAtIndex:r];
-        [s appendFormat:@"%C", c];
-    }
-    return [NSString stringWithString:s];
+    self.invitationHandler = [NSArray arrayWithObject:invitationHandler];
+    self.invitationPeer = peerID;
+    
+    NSString *title = [NSString stringWithFormat:@"%@", self.invitationPeer.displayName];
+    
+    NSString *message = [NSString stringWithFormat:@"%@ wants to connect", self.invitationPeer.displayName];
+    
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Decline"
+                                              otherButtonTitles:@"Accept", nil];
+    
+    [alertView show];
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    BOOL accept = (buttonIndex != alertView.cancelButtonIndex) ? YES : NO;
+    
+    SessionContainer *newSession = [[DataSource sharedInstance] createNewSessionWithPeerID:self.invitationPeer];
+    self.ConvWithInitialConnectionInProgress = newSession;
+    void (^invitationHandler)(BOOL, MCSession *) = [self.invitationHandler objectAtIndex:0];
+    
+    invitationHandler(accept, newSession.session);
+    
+}
+
+
+- (void) dealloc {
+    [self.advertiser stopAdvertisingPeer];
+}
+
+#pragma mark - KVO for activeConversations
+
+- (NSUInteger) countOfActiveConversations {
+    return self.activeConversations.count;
+}
+
+- (id) objectInActiveConversationsAtIndex:(NSUInteger)index {
+    return [self.activeConversations objectAtIndex:index];
+}
+
+- (NSArray *) activeConversationsAtIndexes:(NSIndexSet *)indexes {
+    return [self.activeConversations objectsAtIndexes:indexes];
+}
+
+- (void) insertObject:(SessionContainer *)object inActiveConversationsAtIndex:(NSUInteger)index {
+    [_activeConversations insertObject:object atIndex:index];
+}
+
+- (void) removeObjectFromActiveConversationsAtIndex:(NSUInteger)index {
+    [_activeConversations removeObjectAtIndex:index];
+}
+
+- (void) replaceObjectInActiveConversationsAtIndex:(NSUInteger)index withObject:(id)object {
+    [_activeConversations replaceObjectAtIndex:index withObject:object];
+}
+
+-(void) deleteActiveConversation:(SessionContainer *)activeConversation {
+    NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"activeConversations"];
+    [mutableArrayWithKVO removeObject:activeConversation];
+}
+
+- (void) addActiveConversationsObject:(SessionContainer *)activeConversation {
+    NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"activeConversations"];
+    [mutableArrayWithKVO addObject:activeConversation];
+}
 
 @end

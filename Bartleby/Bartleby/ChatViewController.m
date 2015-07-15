@@ -47,7 +47,7 @@
     _transcripts = [NSMutableArray new];
     _imageNameIndex = [NSMutableDictionary new];
     
-
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPeers)];
 
 }
 
@@ -60,7 +60,7 @@
     // Get the display name and service type from the previous session (if any)
     self.sessionContainer = [DataSource sharedInstance].currentConversation;
     self.sessionContainer.delegate = self;
-    self.displayName = [DataSource sharedInstance].currentConversation.conversationDisplayName;
+    self.displayName = [[DataSource sharedInstance].currentConversation.peersConnectedToSession componentsJoinedByString:@", "];
     self.serviceType = [DataSource sharedInstance].serviceType;
     
     self.navigationItem.title = self.displayName;
@@ -358,4 +358,8 @@
     [self moveToolBarUp:NO forKeyboardNotification:notification];
 }
 
+- (void) addPeers {
+    [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
+
+}
 @end

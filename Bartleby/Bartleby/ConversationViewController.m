@@ -11,11 +11,11 @@
 #import "ConversationViewController.h"
 #import "DataSource.h"
 #import "SessionContainer.h"
+#import "PeerBrowserTableViewController.h"
 
-@interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate, MCBrowserViewControllerDelegate>
+@interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *conversations;
-@property (nonatomic, strong) SessionContainer *addedSession;
 
 @end
 
@@ -24,26 +24,36 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     [self.tableView reloadData];
+    [self checkEmptyTableView];
+
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    //self.tableView.backgroundColor = [UIColor blueColor];
-    //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [[DataSource sharedInstance] addObserver:self forKeyPath:@"activeConversations" options:0 context:nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didPressAddConversation)];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void) checkEmptyTableView {
+    
+    UILabel *nothingLabel = [[UILabel alloc] initWithFrame:self.tableView.frame];
+
+    if ([DataSource sharedInstance].activeConversations.count == 0) {
+        
+        nothingLabel.text = @"No conversations here. Start a new one by hitting the + above!";
+        nothingLabel.textAlignment = NSTextAlignmentCenter;
+        nothingLabel.numberOfLines = 0;
+        
+        self.tableView.backgroundView = nothingLabel;
+        self.tableView.separatorColor = [UIColor clearColor];
+        
+    } else {
+        self.tableView.backgroundView = nil;
+        self.tableView.separatorColor = [UIColor grayColor];
+    }
 }
 
 #pragma mark - Table view
@@ -64,16 +74,8 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"conversationCell" forIndexPath:indexPath];
     
     SessionContainer *conversation = [DataSource sharedInstance].activeConversations[indexPath.row];
-    NSMutableString *conversationTitle = [NSMutableString stringWithString:@"Chat with "];
-    for (MCPeerID *connectedPeer in conversation.session.connectedPeers) {
-        [conversationTitle appendString:connectedPeer.displayName];
-        
-    }
-    NSLog(@"%@", conversationTitle);
     
-    conversation.conversationDisplayName = conversationTitle;
-    
-    cell.textLabel.text = conversation.conversationDisplayName;
+    cell.textLabel.text = [conversation.peersConnectedToSession componentsJoinedByString:@", "];
     
     //cell.layer.cornerRadius = 10;
     //cell.layer.masksToBounds = YES;
@@ -86,40 +88,23 @@
     [DataSource sharedInstance].currentConversation = [DataSource sharedInstance].activeConversations[indexPath.row];
     [self performSegueWithIdentifier:@"showChat" sender:self]; 
 }
-/*
+
  // Override to support conditional editing of the table view.
  - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
  // Return NO if you do not want the specified item to be editable.
  return YES;
  }
- */
 
-/*
  // Override to support editing the table view.
  - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+     if (editingStyle == UITableViewCellEditingStyleDelete) {
+         // Delete the row from the data source
+         [[DataSource sharedInstance].activeConversations removeObjectAtIndex:indexPath.row];
+         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+         
+         [self checkEmptyTableView]; 
+     }
  }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 
  #pragma mark - Navigation
  
@@ -129,54 +114,42 @@
  // Pass the selected object to the new view controller.
  }
 
-
-
-
-
 #pragma mark - Add Conversation
 
 - (void) didPressAddConversation {
-    // Instantiate and present the MCBrowserViewController
+    // Instantiate session and present the MCBrowserViewController
+    [DataSource sharedInstance].currentConversation = [[DataSource sharedInstance] createNewSessionWithPeerID:[DataSource sharedInstance].userID];
     
-    self.addedSession = [[DataSource sharedInstance] createNewSessionWithName:[DataSource sharedInstance].userName];
-    
-    MCBrowserViewController *browserViewController = [[MCBrowserViewController alloc] initWithServiceType:[DataSource sharedInstance].serviceType session:self.addedSession.session];
-    
-    browserViewController.delegate = self;
-    browserViewController.minimumNumberOfPeers = kMCSessionMinimumNumberOfPeers;
-    browserViewController.maximumNumberOfPeers = kMCSessionMaximumNumberOfPeers;
-    
-    [self presentViewController:browserViewController animated:YES completion:nil];
+    [self performSegueWithIdentifier:@"showChat" sender:self];
+
 }
 
-#pragma mark - MCBrowserViewControllerDelegate methods
+#pragma KVO
 
-// Override this method to filter out peers based on application specific needs
-- (BOOL)browserViewController:(MCBrowserViewController *)browserViewController shouldPresentNearbyPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info
-{
-    return YES;
+- (void) dealloc {
+    
+    [[DataSource sharedInstance] removeObserver:self forKeyPath:@"activeConversations"];
+
 }
 
-// Override this to know when the user has pressed the "done" button in the MCBrowserViewController
-- (void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController
-{
-    if (self.addedSession.session.connectedPeers.count < 1) {
-        [[DataSource sharedInstance].activeConversations removeObject:self.addedSession];
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == [DataSource sharedInstance] && [keyPath isEqualToString:@"activeConversations"]) {
+        int kindOfChange = [change[NSKeyValueChangeKindKey] intValue];
+        
+        if (kindOfChange == NSKeyValueChangeSetting ||
+            kindOfChange == NSKeyValueChangeInsertion ||
+            kindOfChange == NSKeyValueChangeRemoval ||
+            kindOfChange == NSKeyValueChangeReplacement) {
+
+            [self checkEmptyTableView];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+
+            
+        }
     }
-    
-    [browserViewController dismissViewControllerAnimated:YES completion:nil];
 }
-
-// Override this to know when the user has pressed the "cancel" button in the MCBrowserViewController
-- (void)browserViewControllerWasCancelled:(MCBrowserViewController *)browserViewController
-{
-    
-    if (self.addedSession.session.connectedPeers.count < 1) {
-        [[DataSource sharedInstance].activeConversations removeObject:self.addedSession];
-    }
-    
-    [browserViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
 
 @end
