@@ -6,12 +6,29 @@
 //  Copyright (c) 2015 Trevor Vieweg. All rights reserved.
 //
 
+@import MultipeerConnectivity;
 
 @class SessionContainer;
 
 #import <Foundation/Foundation.h>
 
+@protocol DataSourceDelegate <NSObject>
+
+- (void) userAcceptedNewConversationRequest; 
+
+@end
+
 @interface DataSource : NSObject
+
+// Framework UI class for handling incoming invitations
+@property (retain, nonatomic) MCNearbyServiceAdvertiser *advertiser;
+
+@property (nonatomic, strong) NSArray *invitationHandler;
+@property (nonatomic, strong) MCPeerID *invitationPeer;
+
+@property (nonatomic, strong) NSMutableArray *availablePeers;
+
+@property (nonatomic, strong) NSMutableArray *connectedPeers;
 
 @property (nonatomic, strong) NSMutableArray *activeConversations;
 
@@ -19,12 +36,24 @@
 
 @property (nonatomic, strong) NSString *serviceType;
 
-@property (nonatomic, strong) NSString *userName;
+@property (nonatomic, strong) MCPeerID *userID;
 
-@property (nonatomic, strong) SessionContainer *currentConversation; 
+@property (nonatomic, strong) SessionContainer *currentConversation;
+@property (nonatomic, strong) SessionContainer *ConvWithInitialConnectionInProgress;
 
-- (SessionContainer *) createNewSessionWithName:(NSString *)name; 
+- (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID;
 
 + (instancetype) sharedInstance;
+
+
+//KVO methods - made public since changes are made to Active Conversations by SessionContainer during connections
+- (NSUInteger) countOfActiveConversations;
+- (id) objectInActiveConversationsAtIndex:(NSUInteger)index;
+- (NSArray *) activeConversationsAtIndexes:(NSIndexSet *)indexes;
+- (void) insertObject:(SessionContainer *)object inActiveConversationsAtIndex:(NSUInteger)index;
+- (void) removeObjectFromActiveConversationsAtIndex:(NSUInteger)index;
+- (void) replaceObjectInActiveConversationsAtIndex:(NSUInteger)index withObject:(id)object;
+- (void) deleteActiveConversation:(SessionContainer *)activeConversation;
+- (void) addActiveConversationsObject:(SessionContainer *)activeConversation;
 
 @end

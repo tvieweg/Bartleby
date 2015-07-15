@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		69CFCDE31B5192AB0014207A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE21B5192AB0014207A /* main.m */; };
 		69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE51B5192AB0014207A /* AppDelegate.m */; };
-		69CFCDE91B5192AB0014207A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE81B5192AB0014207A /* ViewController.m */; };
-		69CFCDEC1B5192AB0014207A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCDEA1B5192AB0014207A /* Main.storyboard */; };
 		69CFCDEE1B5192AB0014207A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCDED1B5192AB0014207A /* Images.xcassets */; };
 		69CFCDF11B5192AB0014207A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCDEF1B5192AB0014207A /* LaunchScreen.xib */; };
 		69CFCDFD1B5192AB0014207A /* BartlebyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDFC1B5192AB0014207A /* BartlebyTests.m */; };
@@ -32,6 +30,7 @@
 		69CFCE351B52EA960014207A /* bubble-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE321B52EA960014207A /* bubble-left@2x.png */; };
 		69CFCE361B52EA960014207A /* bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE331B52EA960014207A /* bubble-right@2x.png */; };
 		69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE341B52EA960014207A /* PhotoButton@2x.png */; };
+		B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,9 +49,6 @@
 		69CFCDE21B5192AB0014207A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		69CFCDE41B5192AB0014207A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		69CFCDE51B5192AB0014207A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		69CFCDE71B5192AB0014207A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		69CFCDE81B5192AB0014207A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		69CFCDEB1B5192AB0014207A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		69CFCDED1B5192AB0014207A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		69CFCDF01B5192AB0014207A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		69CFCDF61B5192AB0014207A /* BartlebyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BartlebyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +82,8 @@
 		69CFCE321B52EA960014207A /* bubble-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-left@2x.png"; sourceTree = "<group>"; };
 		69CFCE331B52EA960014207A /* bubble-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-right@2x.png"; sourceTree = "<group>"; };
 		69CFCE341B52EA960014207A /* PhotoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PhotoButton@2x.png"; sourceTree = "<group>"; };
+		B193B4EC1B5433C200C5F4F8 /* PeerBrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerBrowserTableViewController.h; sourceTree = "<group>"; };
+		B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeerBrowserTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,32 +130,11 @@
 		69CFCDDF1B5192AB0014207A /* Bartleby */ = {
 			isa = PBXGroup;
 			children = (
-				69CFCE2E1B51965B0014207A /* User.h */,
-				69CFCE2F1B51965B0014207A /* User.m */,
-				69CFCE061B51934C0014207A /* SessionContainer.h */,
-				69CFCE071B51934C0014207A /* SessionContainer.m */,
-				69CFCE081B51934C0014207A /* Transcript.h */,
-				69CFCE091B51934C0014207A /* Transcript.m */,
-				69CFCE0A1B51934C0014207A /* ProgressObserver.h */,
-				69CFCE0B1B51934C0014207A /* ProgressObserver.m */,
-				69CFCE2B1B5196110014207A /* DataSource.h */,
-				69CFCE2C1B5196110014207A /* DataSource.m */,
-				69CFCE0C1B51934C0014207A /* MainStoryboard_iPhone.storyboard */,
-				69CFCE201B5194540014207A /* ConversationViewController.h */,
-				69CFCE211B5194540014207A /* ConversationViewController.m */,
-				69CFCE0D1B51934C0014207A /* MessageView.h */,
-				69CFCE0E1B51934C0014207A /* MessageView.m */,
-				69CFCE0F1B51934C0014207A /* ImageView.h */,
-				69CFCE101B51934C0014207A /* ImageView.m */,
-				69CFCE111B51934C0014207A /* ProgressView.h */,
-				69CFCE121B51934C0014207A /* ProgressView.m */,
-				69CFCE131B51934C0014207A /* ChatViewController.h */,
-				69CFCE141B51934C0014207A /* ChatViewController.m */,
+				B193B4E31B54291A00C5F4F8 /* Model */,
+				B193B4E41B54292200C5F4F8 /* View */,
+				B193B4E51B54292C00C5F4F8 /* Controller */,
 				69CFCDE41B5192AB0014207A /* AppDelegate.h */,
 				69CFCDE51B5192AB0014207A /* AppDelegate.m */,
-				69CFCDE71B5192AB0014207A /* ViewController.h */,
-				69CFCDE81B5192AB0014207A /* ViewController.m */,
-				69CFCDEA1B5192AB0014207A /* Main.storyboard */,
 				69CFCDED1B5192AB0014207A /* Images.xcassets */,
 				69CFCDEF1B5192AB0014207A /* LaunchScreen.xib */,
 				69CFCDE01B5192AB0014207A /* Supporting Files */,
@@ -204,6 +181,50 @@
 			);
 			name = Frameworks;
 			path = Bartleby;
+			sourceTree = "<group>";
+		};
+		B193B4E31B54291A00C5F4F8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				69CFCE2E1B51965B0014207A /* User.h */,
+				69CFCE2F1B51965B0014207A /* User.m */,
+				69CFCE061B51934C0014207A /* SessionContainer.h */,
+				69CFCE071B51934C0014207A /* SessionContainer.m */,
+				69CFCE081B51934C0014207A /* Transcript.h */,
+				69CFCE091B51934C0014207A /* Transcript.m */,
+				69CFCE0A1B51934C0014207A /* ProgressObserver.h */,
+				69CFCE0B1B51934C0014207A /* ProgressObserver.m */,
+				69CFCE2B1B5196110014207A /* DataSource.h */,
+				69CFCE2C1B5196110014207A /* DataSource.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		B193B4E41B54292200C5F4F8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				69CFCE0D1B51934C0014207A /* MessageView.h */,
+				69CFCE0E1B51934C0014207A /* MessageView.m */,
+				69CFCE0F1B51934C0014207A /* ImageView.h */,
+				69CFCE101B51934C0014207A /* ImageView.m */,
+				69CFCE111B51934C0014207A /* ProgressView.h */,
+				69CFCE121B51934C0014207A /* ProgressView.m */,
+				69CFCE0C1B51934C0014207A /* MainStoryboard_iPhone.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B193B4E51B54292C00C5F4F8 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				69CFCE201B5194540014207A /* ConversationViewController.h */,
+				69CFCE211B5194540014207A /* ConversationViewController.m */,
+				69CFCE131B51934C0014207A /* ChatViewController.h */,
+				69CFCE141B51934C0014207A /* ChatViewController.m */,
+				B193B4EC1B5433C200C5F4F8 /* PeerBrowserTableViewController.h */,
+				B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -288,7 +309,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */,
-				69CFCDEC1B5192AB0014207A /* Main.storyboard in Resources */,
 				69CFCE361B52EA960014207A /* bubble-right@2x.png in Resources */,
 				69CFCE351B52EA960014207A /* bubble-left@2x.png in Resources */,
 				69CFCDF11B5192AB0014207A /* LaunchScreen.xib in Resources */,
@@ -316,8 +336,8 @@
 				69CFCE1D1B51934C0014207A /* ProgressView.m in Sources */,
 				69CFCE2D1B5196110014207A /* DataSource.m in Sources */,
 				69CFCE1E1B51934C0014207A /* ChatViewController.m in Sources */,
-				69CFCDE91B5192AB0014207A /* ViewController.m in Sources */,
 				69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */,
+				B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */,
 				69CFCE1C1B51934C0014207A /* ImageView.m in Sources */,
 				69CFCE301B51965B0014207A /* User.m in Sources */,
 				69CFCE1B1B51934C0014207A /* MessageView.m in Sources */,
@@ -346,14 +366,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		69CFCDEA1B5192AB0014207A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				69CFCDEB1B5192AB0014207A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		69CFCDEF1B5192AB0014207A /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -522,6 +534,7 @@
 				69CFCE021B5192AB0014207A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		69CFCE031B5192AB0014207A /* Build configuration list for PBXNativeTarget "BartlebyTests" */ = {
 			isa = XCConfigurationList;
@@ -530,6 +543,7 @@
 				69CFCE051B5192AB0014207A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

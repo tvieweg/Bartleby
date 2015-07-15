@@ -16,13 +16,17 @@
 // Container utility class for managing MCSession state, API calls, and it's delegate callbacks
 @interface SessionContainer : NSObject <MCSessionDelegate>
 
-@property (nonatomic, strong) NSString *conversationDisplayName;
-@property (readonly, nonatomic) MCSession *session;
-@property (assign, nonatomic) id<SessionContainerDelegate> delegate;
-@property (retain, nonatomic) NSMutableArray *sessionTranscripts;
+@property (nonatomic, readonly) MCSession *session;
+@property (nonatomic, assign) id<SessionContainerDelegate> delegate;
+@property (nonatomic, strong) NSMutableArray *sessionTranscripts;
 
-// Designated initializer
+//Used to track any peers that have ever been connected to the session
+@property (nonatomic, strong) NSMutableArray *peersConnectedToSession;
+
+// Designated initializers
 - (id)initWithDisplayName:(NSString *)displayName serviceType:(NSString *)serviceType;
+
+- (id)initWithPeerID:(MCPeerID *)peerID serviceType:(NSString *)serviceType;
 // Method for sending text messages to all connected remote peers.  Returna a message type transcript
 - (Transcript *)sendMessage:(NSString *)message;
 // Method for sending image resources to all connected remote peers.  Returns an progress type transcript for monitoring tranfer

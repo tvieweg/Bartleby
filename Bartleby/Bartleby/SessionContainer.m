@@ -11,10 +11,10 @@
 
 #import "SessionContainer.h"
 #import "Transcript.h"
+#import "DataSource.h"
 
 @interface SessionContainer()
 // Framework UI class for handling incoming invitations
-@property (retain, nonatomic) MCAdvertiserAssistant *advertiserAssistant;
 @end
 
 @implementation SessionContainer
@@ -23,6 +23,9 @@
 - (id)initWithDisplayName:(NSString *)displayName serviceType:(NSString *)serviceType
 {
     if (self = [super init]) {
+        
+        _peersConnectedToSession = [NSMutableArray new];
+
         // Create the peer ID with user input display name.  This display name will be seen by other browsing peers
         MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
         // Create the session that peers will be invited/join into.  You can provide an optinal security identity for custom authentication.  Also you can set the encryption preference for the session.
@@ -31,18 +34,26 @@
         _session.delegate = self;
         // Create the advertiser assistant for managing incoming invitation
         _sessionTranscripts = [NSMutableArray new]; 
-        _advertiserAssistant = [[MCAdvertiserAssistant alloc] initWithServiceType:serviceType discoveryInfo:nil session:_session];
-        // Start the assistant to begin advertising your peers availability
-        [_advertiserAssistant start];
+
     }
     return self;
 }
 
-// On dealloc we should clean up the session by disconnecting from it.
-- (void)dealloc
+- (id)initWithPeerID:(MCPeerID *)peerID serviceType:(NSString *)serviceType
 {
-    [_advertiserAssistant stop];
-    [_session disconnect];
+    if (self = [super init]) {
+        
+        _peersConnectedToSession = [NSMutableArray new];
+
+        // Create the session that peers will be invited/join into.  You can provide an optinal security identity for custom authentication.  Also you can set the encryption preference for the session.
+        _session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
+        // Set ourselves as the MCSessionDelegate
+        _session.delegate = self;
+        // Create the advertiser assistant for managing incoming invitation
+        _sessionTranscripts = [NSMutableArray new];
+
+    }
+    return self;
 }
 
 // Helper method for human readable printing of MCSessionState.  This state is per peer.
@@ -107,6 +118,21 @@
     return transcript;
 }
 
+- (void) addNewConnectedPeer:(NSString *)peerDisplayName {
+    
+    BOOL shouldAddPeer = YES;
+    
+    for (NSString *previousConnectedPeerDisplayName in self.peersConnectedToSession) {
+        if ([peerDisplayName isEqualToString:previousConnectedPeerDisplayName]) {
+            shouldAddPeer = NO;
+        }
+    }
+    
+    if (shouldAddPeer) {
+        [self.peersConnectedToSession addObject:peerDisplayName];
+    }
+}
+
 #pragma mark - MCSessionDelegate methods
 
 // Override this method to handle changes to peer session state
@@ -117,7 +143,14 @@
     NSString *adminMessage = [NSString stringWithFormat:@"'%@' is %@", peerID.displayName, [self stringForPeerConnectionState:state]];
     // Create an local transcript
     Transcript *transcript = [[Transcript alloc] initWithPeerID:peerID message:adminMessage direction:TRANSCRIPT_DIRECTION_LOCAL];
-
+    
+    if (state == MCSessionStateConnected) {
+        [self addNewConnectedPeer:peerID.displayName];
+        
+        if (![[DataSource sharedInstance].activeConversations containsObject:self]) {
+            [[DataSource sharedInstance] insertObject:self inActiveConversationsAtIndex:0];
+        }
+    }
     // Notify the delegate that we have received a new chunk of data from a peer
     [self.delegate receivedTranscript:transcript];
 }
