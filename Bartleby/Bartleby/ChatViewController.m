@@ -18,10 +18,8 @@
 
 @interface ChatViewController () <UITextFieldDelegate, SessionContainerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
-// Display name for local MCPeerID
+// Display name for conversation
 @property (copy, nonatomic) NSString *displayName;
-// Service type for discovery
-@property (copy, nonatomic) NSString *serviceType;
 // MC Session for managing peer state and send/receive data between peers
 @property (retain, nonatomic) SessionContainer *sessionContainer;
 // TableView Data source for managing sent/received messagesz
@@ -48,11 +46,17 @@
     _imageNameIndex = [NSMutableDictionary new];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPeers)];
+    
+    if ([DataSource sharedInstance].isNewConversation) {
+        [DataSource sharedInstance].isNewConversation = NO;
+        [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
+    }
 
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     // Listen for will show/hide notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -60,24 +64,34 @@
     // Get the display name and service type from the previous session (if any)
     self.sessionContainer = [DataSource sharedInstance].currentConversation;
     self.sessionContainer.delegate = self;
-    self.displayName = [[DataSource sharedInstance].currentConversation.peersConnectedToSession componentsJoinedByString:@", "];
-    self.serviceType = [DataSource sharedInstance].serviceType;
     
-    self.navigationItem.title = self.displayName;
+    [self updateViewTitle];
     
     self.transcripts = self.sessionContainer.sessionTranscripts;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void) updateViewTitle {
+    self.displayName = [DataSource sharedInstance].currentConversation.displayName;
+    
+    //TODO this does not work after view has loaded. Why?
+
+    if (self.displayName == nil) {
+        self.title = @"New Conversation";
+    } else {
+        self.title = self.displayName;
+        [self.navigationController reloadInputViews];
+        
+    }
+    
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     // Stop listening for keyboard notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts; 
 }
-
-
-
 
 #pragma mark - SessionContainerDelegate
 
@@ -87,6 +101,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
 		[self insertTranscript:transcript];
     });
+    
 }
 
 - (void)updateTranscript:(Transcript *)transcript
@@ -104,8 +119,18 @@
     });
 }
 
-#pragma mark - private methods
+- (void)session:(SessionContainer *)session peerDidConnect:(MCPeerID *)peer {
+    if (![[DataSource sharedInstance].activeConversations containsObject:session]) {
+        [[DataSource sharedInstance] insertObject:session inActiveConversationsAtIndex:0];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateViewTitle];
+    });
 
+}
+
+#pragma mark - private methods
 
 // Helper method for inserting a sent/received message into the data source and reload the view.
 // Make sure you call this on the main thread
@@ -133,11 +158,11 @@
 
 #pragma mark - Table view data source
 
-// Only one section in this example
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
 }
+
 // The numer of rows is based on the count in the transcripts arrays
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -359,6 +384,7 @@
 }
 
 - (void) addPeers {
+    
     [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
 
 }
