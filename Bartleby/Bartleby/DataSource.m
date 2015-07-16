@@ -9,9 +9,15 @@
 #import "DataSource.h"
 #import "SessionContainer.h"
 
+NSString *const kDSServiceType = @"bartleby-chat";
+
 @interface DataSource () <MCNearbyServiceAdvertiserDelegate, UIAlertViewDelegate> {
     NSMutableArray *_activeConversations;
 }
+
+//Used to store parameters when accepting invitations.
+@property (nonatomic, strong) NSArray *invitationHandler;
+@property (nonatomic, strong) MCPeerID *invitationPeer;
 
 @end
 
@@ -30,22 +36,30 @@
     self = [super init];
     
     if (self) {
-        self.serviceType = @"bartleby-chat";
+        
+        //set userID and service type.
+        self.serviceType = kDSServiceType;
         self.userID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
-        self.activeConversations = [NSMutableArray new];
         
-        self.availablePeers = [NSMutableArray new];
-        self.connectedPeers = [NSMutableArray new];
-        
+        //start advertiser on app start.
         self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.userID discoveryInfo:nil serviceType:self.serviceType];
         self.advertiser.delegate = self;
         [self.advertiser startAdvertisingPeer];
+        
+        //initialize arrays
+        self.activeConversations = [NSMutableArray new];
+        self.availablePeers = [NSMutableArray new];
+        self.connectedPeers = [NSMutableArray new];
+        
+        //Used by ConversationViewController to tell ChatViewController when user is creating a new conversation. 
+        self.isNewConversation = NO;
         
     }
     
     return self;
 }
 
+#pragma mark - Session Creation
 
 - (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID {
     

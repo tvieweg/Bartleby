@@ -15,46 +15,27 @@
 
 @interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, strong) NSMutableArray *conversations;
-
 @end
 
 @implementation ConversationViewController
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
+    
     [self.tableView reloadData];
     [self checkEmptyTableView];
-
     
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //Register for KVO on active conversations.
     [[DataSource sharedInstance] addObserver:self forKeyPath:@"activeConversations" options:0 context:nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didPressAddConversation)];
 }
 
-- (void) checkEmptyTableView {
-    
-    UILabel *nothingLabel = [[UILabel alloc] initWithFrame:self.tableView.frame];
-
-    if ([DataSource sharedInstance].activeConversations.count == 0) {
-        
-        nothingLabel.text = @"No conversations here. Start a new one by hitting the + above!";
-        nothingLabel.textAlignment = NSTextAlignmentCenter;
-        nothingLabel.numberOfLines = 0;
-        
-        self.tableView.backgroundView = nothingLabel;
-        self.tableView.separatorColor = [UIColor clearColor];
-        
-    } else {
-        self.tableView.backgroundView = nil;
-        self.tableView.separatorColor = [UIColor grayColor];
-    }
-}
 
 #pragma mark - Table view
 
@@ -75,7 +56,7 @@
     
     SessionContainer *conversation = [DataSource sharedInstance].activeConversations[indexPath.row];
     
-    cell.textLabel.text = [conversation.peersConnectedToSession componentsJoinedByString:@", "];
+    cell.textLabel.text = conversation.displayName;
     
     //cell.layer.cornerRadius = 10;
     //cell.layer.masksToBounds = YES;
@@ -89,48 +70,51 @@
     [self performSegueWithIdentifier:@"showChat" sender:self]; 
 }
 
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
+- (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
 
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-     if (editingStyle == UITableViewCellEditingStyleDelete) {
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
          // Delete the row from the data source
          [[DataSource sharedInstance].activeConversations removeObjectAtIndex:indexPath.row];
          [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
          
          [self checkEmptyTableView]; 
      }
- }
+}
 
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
+//Helper function to set table to single message if empty.
+- (void) checkEmptyTableView {
+    if ([DataSource sharedInstance].activeConversations.count == 0) {
+        
+        UILabel *nothingLabel = [[UILabel alloc] initWithFrame:self.tableView.frame];
+        nothingLabel.text = NSLocalizedString(@"No conversations here. Start a new one by hitting the + above!", nil);
+        nothingLabel.textAlignment = NSTextAlignmentCenter;
+        nothingLabel.numberOfLines = 0;
+        
+        self.tableView.backgroundView = nothingLabel;
+        self.tableView.separatorColor = [UIColor clearColor];
+        
+    } else {
+        self.tableView.backgroundView = nil;
+        self.tableView.separatorColor = [UIColor grayColor];
+    }
+}
 
-#pragma mark - Add Conversation
+#pragma mark - Add Conversations
 
 - (void) didPressAddConversation {
     // Instantiate session and present the MCBrowserViewController
     [DataSource sharedInstance].currentConversation = [[DataSource sharedInstance] createNewSessionWithPeerID:[DataSource sharedInstance].userID];
+    [DataSource sharedInstance].isNewConversation = YES; 
     
     [self performSegueWithIdentifier:@"showChat" sender:self];
 
 }
 
-#pragma KVO
-
-- (void) dealloc {
-    
-    [[DataSource sharedInstance] removeObserver:self forKeyPath:@"activeConversations"];
-
-}
+#pragma mark - KVO
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (object == [DataSource sharedInstance] && [keyPath isEqualToString:@"activeConversations"]) {
@@ -150,6 +134,12 @@
             
         }
     }
+}
+
+- (void) dealloc {
+    
+    [[DataSource sharedInstance] removeObserver:self forKeyPath:@"activeConversations"];
+    
 }
 
 @end

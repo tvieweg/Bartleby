@@ -20,31 +20,27 @@
 
 @interface DataSource : NSObject
 
-// Framework UI class for handling incoming invitations
+//user ID, service type and advertiser set at initialization
+@property (nonatomic, strong) MCPeerID *userID;
+@property (nonatomic, strong) NSString *serviceType;
 @property (retain, nonatomic) MCNearbyServiceAdvertiser *advertiser;
 
-@property (nonatomic, strong) NSArray *invitationHandler;
-@property (nonatomic, strong) MCPeerID *invitationPeer;
 
 @property (nonatomic, strong) NSMutableArray *availablePeers;
-
 @property (nonatomic, strong) NSMutableArray *connectedPeers;
 
 @property (nonatomic, strong) NSMutableArray *activeConversations;
 
-@property (nonatomic, strong) NSMutableArray *archivedConversations;
-
-@property (nonatomic, strong) NSString *serviceType;
-
-@property (nonatomic, strong) MCPeerID *userID;
+@property (nonatomic, assign) BOOL isNewConversation; 
 
 @property (nonatomic, strong) SessionContainer *currentConversation;
-@property (nonatomic, strong) SessionContainer *ConvWithInitialConnectionInProgress;
 
-- (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID;
+//Used to temporarily store conversation while connecting to session.
+@property (nonatomic, strong) SessionContainer *ConvWithInitialConnectionInProgress;
 
 + (instancetype) sharedInstance;
 
+- (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID;
 
 //KVO methods - made public since changes are made to Active Conversations by SessionContainer during connections
 - (NSUInteger) countOfActiveConversations;

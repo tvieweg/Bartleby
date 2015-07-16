@@ -15,40 +15,20 @@
 
 @interface SessionContainer()
 // Framework UI class for handling incoming invitations
+@property (nonatomic, strong) MCSession *session;
+
 @end
 
 @implementation SessionContainer
-
-// Session container designated initializer
-- (id)initWithDisplayName:(NSString *)displayName serviceType:(NSString *)serviceType
-{
-    if (self = [super init]) {
-        
-        _peersConnectedToSession = [NSMutableArray new];
-
-        // Create the peer ID with user input display name.  This display name will be seen by other browsing peers
-        MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
-        // Create the session that peers will be invited/join into.  You can provide an optinal security identity for custom authentication.  Also you can set the encryption preference for the session.
-        _session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
-        // Set ourselves as the MCSessionDelegate
-        _session.delegate = self;
-        // Create the advertiser assistant for managing incoming invitation
-        _sessionTranscripts = [NSMutableArray new]; 
-
-    }
-    return self;
-}
 
 - (id)initWithPeerID:(MCPeerID *)peerID serviceType:(NSString *)serviceType
 {
     if (self = [super init]) {
         
-        _peersConnectedToSession = [NSMutableArray new];
-
-        // Create the session that peers will be invited/join into.  You can provide an optinal security identity for custom authentication.  Also you can set the encryption preference for the session.
-        _session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
-        // Set ourselves as the MCSessionDelegate
-        _session.delegate = self;
+        self.peersConnectedToSession = [NSMutableArray new];
+        // Create the session that peers will be invited/join into.
+        self.session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
+        self.session.delegate = self;
         // Create the advertiser assistant for managing incoming invitation
         _sessionTranscripts = [NSMutableArray new];
 
@@ -62,12 +42,29 @@
     switch (state) {
         case MCSessionStateConnected:
             return @"Connected";
-
+            
         case MCSessionStateConnecting:
             return @"Connecting";
 
         case MCSessionStateNotConnected:
             return @"Not Connected";
+    }
+}
+
+// Helper method to determine if peer should be added to total list of people who have connected to conversation.
+- (void) addNewConnectedPeer:(NSString *)peerDisplayName {
+    
+    BOOL shouldAddPeer = YES;
+    
+    for (NSString *previousConnectedPeerDisplayName in self.peersConnectedToSession) {
+        if ([peerDisplayName isEqualToString:previousConnectedPeerDisplayName]) {
+            shouldAddPeer = NO;
+        }
+    }
+    
+    if (shouldAddPeer) {
+        [self.peersConnectedToSession addObject:peerDisplayName];
+        self.displayName = [self.peersConnectedToSession componentsJoinedByString:@", "]; 
     }
 }
 
@@ -98,7 +95,7 @@
     NSProgress *progress;
     // Loop on connected peers and send the image to each
     for (MCPeerID *peerID in _session.connectedPeers) {
-//        imageUrl = [NSURL URLWithString:@"http://images.apple.com/home/images/promo_logic_pro.jpg"];
+        //imageUrl = [NSURL URLWithString:@"http://images.apple.com/home/images/promo_logic_pro.jpg"];
         // Send the resource to the remote peer.  The completion handler block will be called at the end of sending or if any errors occur
         progress = [self.session sendResourceAtURL:imageUrl withName:[imageUrl lastPathComponent] toPeer:peerID withCompletionHandler:^(NSError *error) {
             // Implement this block to know when the sending resource transfer completes and if there is an error.
@@ -114,23 +111,8 @@
     }
     // Create an outgoing progress transcript.  For simplicity we will monitor a single NSProgress.  However users can measure each NSProgress returned individually as needed
     Transcript *transcript = [[Transcript alloc] initWithPeerID:_session.myPeerID imageName:[imageUrl lastPathComponent] progress:progress direction:TRANSCRIPT_DIRECTION_SEND];
-
+    
     return transcript;
-}
-
-- (void) addNewConnectedPeer:(NSString *)peerDisplayName {
-    
-    BOOL shouldAddPeer = YES;
-    
-    for (NSString *previousConnectedPeerDisplayName in self.peersConnectedToSession) {
-        if ([peerDisplayName isEqualToString:previousConnectedPeerDisplayName]) {
-            shouldAddPeer = NO;
-        }
-    }
-    
-    if (shouldAddPeer) {
-        [self.peersConnectedToSession addObject:peerDisplayName];
-    }
 }
 
 #pragma mark - MCSessionDelegate methods
@@ -146,11 +128,10 @@
     
     if (state == MCSessionStateConnected) {
         [self addNewConnectedPeer:peerID.displayName];
-        
-        if (![[DataSource sharedInstance].activeConversations containsObject:self]) {
-            [[DataSource sharedInstance] insertObject:self inActiveConversationsAtIndex:0];
-        }
+        [self.delegate session:self peerDidConnect:peerID];
+
     }
+    
     // Notify the delegate that we have received a new chunk of data from a peer
     [self.delegate receivedTranscript:transcript];
 }

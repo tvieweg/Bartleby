@@ -31,6 +31,7 @@
     [self checkEmptyTableView];
     
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -49,7 +50,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didPressDone)];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didPressCancel)];
-
 
 }
 
@@ -95,11 +95,13 @@
     [self.availableUsers removeAllObjects];
     for (MCPeerID *availableUser in [DataSource sharedInstance].availablePeers) {
         BOOL shouldIncludeUserInAvailableList = YES;
+        
         for (MCPeerID *connectedPeer in [DataSource sharedInstance].currentConversation.session.connectedPeers) {
             if ([availableUser isEqual:connectedPeer]) {
                 shouldIncludeUserInAvailableList = NO;
             }
         }
+        
         if (shouldIncludeUserInAvailableList) {
             [self.availableUsers insertObject:availableUser atIndex:0];
         }
