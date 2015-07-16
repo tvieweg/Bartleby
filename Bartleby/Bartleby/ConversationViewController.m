@@ -79,6 +79,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
          // Delete the row from the data source
          [[DataSource sharedInstance].activeConversations removeObjectAtIndex:indexPath.row];
+          
          [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
          
          [self checkEmptyTableView]; 

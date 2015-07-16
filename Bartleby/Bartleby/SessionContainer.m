@@ -31,6 +31,7 @@
         self.session.delegate = self;
         // Create the advertiser assistant for managing incoming invitation
         _sessionTranscripts = [NSMutableArray new];
+        self.displayName = peerID.displayName; 
 
     }
     return self;
@@ -70,7 +71,7 @@
 
 #pragma mark - Public methods
 
-// Instance method for sending a string bassed text message to all remote peers
+// Instance method for sending a string based text message to all remote peers
 - (Transcript *)sendMessage:(NSString *)message
 {
     // Convert the string into a UTF8 encoded data
@@ -86,6 +87,7 @@
     else {
         // Create a new send transcript
         return [[Transcript alloc] initWithPeerID:_session.myPeerID message:message direction:TRANSCRIPT_DIRECTION_SEND];
+
     }
 }
 
@@ -105,7 +107,10 @@
             else {
                 // Create an image transcript for this received image resource
                 Transcript *transcript = [[Transcript alloc] initWithPeerID:_session.myPeerID imageUrl:imageUrl direction:TRANSCRIPT_DIRECTION_SEND];
-                [self.delegate updateTranscript:transcript];
+                
+                if (self.delegate != nil) {
+                    [self.delegate updateTranscript:transcript];
+                }
             }
         }];
     }
@@ -128,12 +133,21 @@
     
     if (state == MCSessionStateConnected) {
         [self addNewConnectedPeer:peerID.displayName];
-        [self.delegate session:self peerDidConnect:peerID];
+        
+        if (![[DataSource sharedInstance].activeConversations containsObject:self]) {
+            [[DataSource sharedInstance] insertObject:self inActiveConversationsAtIndex:0];
+        }
+        
+        if (self.delegate != nil) {
+            [self.delegate session:self peerDidConnect:peerID];
+        }
 
     }
     
     // Notify the delegate that we have received a new chunk of data from a peer
-    [self.delegate receivedTranscript:transcript];
+    if (self.delegate != nil) {
+        [self.delegate receivedTranscript:transcript];
+    }
 }
 
 // MCSession Delegate callback when receiving data from a peer in a given session
@@ -145,7 +159,13 @@
     Transcript *transcript = [[Transcript alloc] initWithPeerID:peerID message:receivedMessage direction:TRANSCRIPT_DIRECTION_RECEIVE];
     
     // Notify the delegate that we have received a new chunk of data from a peer
-    [self.delegate receivedTranscript:transcript];
+    if (self.delegate != nil) {
+        [self.delegate receivedTranscript:transcript];
+    } else {
+        //The delegate is not available and we need to add this transcript to our datasource.
+        [self.sessionTranscripts addObject:transcript]; 
+    }
+    
 }
 
 // MCSession delegate callback when we start to receive a resource from a peer in a given session
@@ -155,7 +175,9 @@
     // Create a resource progress transcript
     Transcript *transcript = [[Transcript alloc] initWithPeerID:peerID imageName:resourceName progress:progress direction:TRANSCRIPT_DIRECTION_RECEIVE];
     // Notify the UI delegate
-    [self.delegate receivedTranscript:transcript];
+    if (self.delegate != nil) {
+        [self.delegate receivedTranscript:transcript];
+    }
 }
 
 // MCSession delegate callback when a incoming resource transfer ends (possibly with error)
@@ -168,7 +190,7 @@
     }
     else
     {
-        // No error so this is a completed transfer.  The resources is located in a temporary location and should be copied to a permenant locatation immediately.
+        // No error so this is a completed transfer.  The resources is located in a temporary location and should be copied to a permanent locatation immediately.
         // Write to documents directory
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *copyPath = [NSString stringWithFormat:@"%@/%@", [paths objectAtIndex:0], resourceName];
@@ -181,7 +203,10 @@
             NSURL *imageUrl = [NSURL fileURLWithPath:copyPath];
             // Create an image transcript for this received image resource
             Transcript *transcript = [[Transcript alloc] initWithPeerID:peerID imageUrl:imageUrl direction:TRANSCRIPT_DIRECTION_RECEIVE];
-            [self.delegate updateTranscript:transcript];
+            
+            if (self.delegate != nil) {
+                [self.delegate updateTranscript:transcript];
+            }
         }
     }
 }
@@ -190,6 +215,35 @@
 - (void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
 {
     NSLog(@"Received data over stream with name %@ from peer %@", streamName, peerID.displayName);
+}
+
+#pragma mark - NSCoding
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    
+    if (self) {
+        self.sessionTranscripts = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(sessionTranscripts))];
+        self.displayName = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(displayName))];
+        self.peersConnectedToSession = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(peersConnectedToSession))];
+        
+        //reinitialize session
+        self.session = [[MCSession alloc] initWithPeer:[DataSource sharedInstance].userID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
+        self.session.delegate = self;
+        
+        
+    }
+    
+    return self;
+}
+
+- (void) encodeWithCoder:(NSCoder *)aCoder {
+    
+    //session not saved. Reinitialize when initializing from coder.
+    [aCoder encodeObject:self.sessionTranscripts forKey:NSStringFromSelector(@selector(sessionTranscripts))];
+    [aCoder encodeObject:self.displayName forKey:NSStringFromSelector(@selector(displayName))];
+    [aCoder encodeObject:self.peersConnectedToSession forKey:NSStringFromSelector(@selector(peersConnectedToSession))];
+    
 }
 
 @end

@@ -25,9 +25,8 @@
 @property (nonatomic, strong) NSString *serviceType;
 @property (retain, nonatomic) MCNearbyServiceAdvertiser *advertiser;
 
-
+//Used
 @property (nonatomic, strong) NSMutableArray *availablePeers;
-@property (nonatomic, strong) NSMutableArray *connectedPeers;
 
 @property (nonatomic, strong) NSMutableArray *activeConversations;
 
@@ -41,6 +40,9 @@
 + (instancetype) sharedInstance;
 
 - (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID;
+
+//Save active conversations property to disk. Use whenever activeConversations is updated. 
+- (void) saveConversationsToDisk;
 
 //KVO methods - made public since changes are made to Active Conversations by SessionContainer during connections
 - (NSUInteger) countOfActiveConversations;

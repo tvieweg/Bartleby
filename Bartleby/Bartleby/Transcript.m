@@ -43,4 +43,33 @@
     return [self initWithPeerID:peerID message:nil imageName:imageName imageUrl:nil progress:progress direction:direction];
 }
 
+#pragma mark - NSCoding
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    
+    if (self) {
+        _peerID = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(peerID))];
+        _direction = [aDecoder decodeIntForKey:NSStringFromSelector(@selector(direction))];
+        _message = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(message))];
+        _imageName = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageName))];
+        _imageUrl = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageName))];
+        
+    }
+    
+    return self;
+}
+
+- (void) encodeWithCoder:(NSCoder *)aCoder {
+    
+    //session not saved. Reinitialize when initializing from coder.
+    [aCoder encodeInt:self.direction forKey:NSStringFromSelector(@selector(direction))];
+    [aCoder encodeObject:self.peerID forKey:NSStringFromSelector(@selector(peerID))];
+    [aCoder encodeObject:self.message forKey:NSStringFromSelector(@selector(message))];
+    [aCoder encodeObject:self.imageName forKey:NSStringFromSelector(@selector(imageName))];
+    [aCoder encodeObject:self.imageUrl forKey:NSStringFromSelector(@selector(imageUrl))];
+    
+}
+
+
 @end
