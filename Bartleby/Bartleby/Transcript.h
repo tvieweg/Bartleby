@@ -17,7 +17,7 @@ typedef enum {
     TRANSCRIPT_DIRECTION_LOCAL // for admin messages. i.e. "<name> connected"
 } TranscriptDirection;
 
-@interface Transcript : NSObject
+@interface Transcript : NSObject <NSCoding>
 
 // Direction of the transcript
 @property (readonly, nonatomic) TranscriptDirection direction;

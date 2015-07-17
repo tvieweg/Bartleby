@@ -173,9 +173,7 @@
     [self.browser invitePeer:peerToConnect toSession:[DataSource sharedInstance].currentConversation.session
                  withContext:nil
                      timeout:30];
-    
-    [[DataSource sharedInstance].connectedPeers addObject:peerToConnect];
-    
+        
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self dismissViewControllerAnimated:YES completion:nil]; 
     

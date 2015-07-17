@@ -71,7 +71,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="coN-sD-VBL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="401" y="32"/>
+            <point key="canvasLocation" x="413" y="32"/>
         </scene>
         <!--Peer Browser Table View Controller-->
         <scene sceneID="AFc-SL-njv">

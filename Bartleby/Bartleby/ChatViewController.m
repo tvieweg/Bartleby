@@ -16,7 +16,7 @@
 #import "ProgressView.h"
 #import "DataSource.h"
 
-@interface ChatViewController () <UITextFieldDelegate, SessionContainerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface ChatViewController () <UITextFieldDelegate, SessionContainerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 // Display name for conversation
 @property (copy, nonatomic) NSString *displayName;
@@ -61,13 +61,35 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
-    // Get the display name and service type from the previous session (if any)
     self.sessionContainer = [DataSource sharedInstance].currentConversation;
     self.sessionContainer.delegate = self;
+    
     
     [self updateViewTitle];
     
     self.transcripts = self.sessionContainer.sessionTranscripts;
+    
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:YES];
+    
+    if (self.sessionContainer.session.connectedPeers.count == 0 && self.sessionContainer.peersConnectedToSession.count > 0) {
+        
+        //People were previously connected and now are not. Alert user.
+        
+        NSString *message = NSLocalizedString(@"Looks like all users have been disconnected. Reconnect using the + button above.", @"Reconnect with users description");
+        Transcript *lastMessage = [self.transcripts lastObject];
+        
+        if (![lastMessage.message isEqualToString:message]) {
+            // Send the message
+            Transcript *transcript = [[Transcript alloc] initWithPeerID:[DataSource sharedInstance].userID message:message direction:TRANSCRIPT_DIRECTION_LOCAL];
+            
+            // Add the transcript to the table view data source and reload
+            [self insertTranscript:transcript];
+            
+        }
+    }
 }
 
 - (void) updateViewTitle {
@@ -90,6 +112,7 @@
     // Stop listening for keyboard notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    self.sessionContainer.delegate = nil;
     [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts; 
 }
 
@@ -120,14 +143,10 @@
 }
 
 - (void)session:(SessionContainer *)session peerDidConnect:(MCPeerID *)peer {
-    if (![[DataSource sharedInstance].activeConversations containsObject:session]) {
-        [[DataSource sharedInstance] insertObject:session inActiveConversationsAtIndex:0];
-    }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateViewTitle];
     });
-
 }
 
 #pragma mark - private methods
@@ -383,9 +402,18 @@
     [self moveToolBarUp:NO forKeyboardNotification:notification];
 }
 
+#pragma mark - misc.
+
 - (void) addPeers {
     
     [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
 
 }
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    [self addPeers];
+    
+}
+
 @end
