@@ -169,7 +169,36 @@
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     MCPeerID *peerToConnect = [DataSource sharedInstance].availablePeers[indexPath.row];
+    SessionContainer *sessionToMoveToActive;
     
+    //check new session against existing sessions. If one already exists, replace it. If not, create new session.
+    for (SessionContainer *activeConversation in [DataSource sharedInstance].activeConversations) {
+        if ([activeConversation.displayName isEqualToString:peerToConnect.displayName]) {
+            
+            [DataSource sharedInstance].currentConversation = activeConversation;
+            
+        }
+    }
+    
+    for (SessionContainer *archivedConversation in [DataSource sharedInstance].archivedConversations) {
+        if ([archivedConversation.displayName isEqualToString:peerToConnect.displayName]) {
+            
+            //hold session here and move after enumeration.
+            sessionToMoveToActive = archivedConversation;
+            [DataSource sharedInstance].currentConversation = archivedConversation;
+            
+        }
+        
+    }
+    
+    if (sessionToMoveToActive) {
+        [[DataSource sharedInstance].activeConversations insertObject:sessionToMoveToActive atIndex:0];
+        [[DataSource sharedInstance].archivedConversations removeObject:sessionToMoveToActive];
+        
+        NSLog(@"Count of archived conversations is now %lu", [DataSource sharedInstance].archivedConversations.count); 
+    }
+
+
     [self.browser invitePeer:peerToConnect toSession:[DataSource sharedInstance].currentConversation.session
                  withContext:nil
                      timeout:30];

@@ -42,7 +42,6 @@
     [super viewDidLoad];
 
     // Init transcripts array to use as table view data source
-    _transcripts = [NSMutableArray new];
     _imageNameIndex = [NSMutableDictionary new];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPeers)];
@@ -56,7 +55,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    _transcripts = [NSMutableArray new];
     // Listen for will show/hide notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -64,10 +63,10 @@
     self.sessionContainer = [DataSource sharedInstance].currentConversation;
     self.sessionContainer.delegate = self;
     
-    
-    [self updateViewTitle];
-    
     self.transcripts = self.sessionContainer.sessionTranscripts;
+
+    [self updateViewTitle];
+    [self.tableView reloadData]; 
     
 }
 

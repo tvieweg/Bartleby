@@ -12,8 +12,9 @@
 #import "DataSource.h"
 #import "SessionContainer.h"
 #import "PeerBrowserTableViewController.h"
+#import "MCSwipeTableViewCell.h"
 
-@interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate, MCSwipeTableViewCellDelegate>
 
 @end
 
@@ -52,7 +53,24 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"conversationCell" forIndexPath:indexPath];
+    
+    static NSString *CellIdentifier = @"conversationCell";
+
+    MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (!cell) {
+        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        
+        // iOS 7 separator
+        if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+            cell.separatorInset = UIEdgeInsetsZero;
+        }
+        
+        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+    }
+    
+    [self configureCell:cell forRowAtIndexPath:indexPath];
     
     SessionContainer *conversation = [DataSource sharedInstance].activeConversations[indexPath.row];
     
@@ -65,6 +83,54 @@
     return cell;
 }
 
+- (void)configureCell:(MCSwipeTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UIView *crossView = [self viewWithImageName:@"cross"];
+    UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
+    
+    UIView *listView = [self viewWithImageName:@"list"];
+    UIColor *blueColor = [UIColor colorWithRed:25.0 / 255.0 green:40.0 / 255.0 blue:154.0 / 255.0 alpha:1.0];
+    
+    // Setting the default inactive state color to the tableView background color
+    [cell setDefaultColor:self.tableView.backgroundView.backgroundColor];
+    
+    [cell setDelegate:self];
+    
+    [cell setSwipeGestureWithView:listView color:blueColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        
+        NSLog(@"Did swipe \"list\" cell");
+        
+        //move conversation to archive and update table view.
+        SessionContainer *archiveConversation = [[DataSource sharedInstance].activeConversations objectAtIndex:indexPath.row];
+        [[DataSource sharedInstance].archivedConversations addObject:archiveConversation];
+        [[DataSource sharedInstance].activeConversations removeObject:archiveConversation];
+        
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self checkEmptyTableView];
+        
+        NSLog(@"Count of archived conversations is now %lu", (unsigned long)[DataSource sharedInstance].archivedConversations.count);
+    }];
+    
+    [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        NSLog(@"Did swipe \"cross\" cell");
+        [[DataSource sharedInstance].activeConversations removeObjectAtIndex:indexPath.row];
+        
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        [self checkEmptyTableView];
+
+    }];
+}
+
+
+- (UIView *)viewWithImageName:(NSString *)imageName {
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.contentMode = UIViewContentModeCenter;
+    return imageView;
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [DataSource sharedInstance].currentConversation = [DataSource sharedInstance].activeConversations[indexPath.row];
     [self performSegueWithIdentifier:@"showChat" sender:self]; 
@@ -72,18 +138,6 @@
 
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
-}
-
-- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-         // Delete the row from the data source
-         [[DataSource sharedInstance].activeConversations removeObjectAtIndex:indexPath.row];
-          
-         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-         
-         [self checkEmptyTableView]; 
-     }
 }
 
 //Helper function to set table to single message if empty.
@@ -103,6 +157,25 @@
         self.tableView.separatorColor = [UIColor grayColor];
     }
 }
+
+#pragma mark - MCSwipeTableViewCellDelegate
+
+
+// When the user starts swiping the cell this method is called
+- (void)swipeTableViewCellDidStartSwiping:(MCSwipeTableViewCell *)cell {
+    // NSLog(@"Did start swiping the cell!");
+}
+
+// When the user ends swiping the cell this method is called
+- (void)swipeTableViewCellDidEndSwiping:(MCSwipeTableViewCell *)cell {
+    // NSLog(@"Did end swiping the cell!");
+}
+
+// When the user is dragging, this method is called and return the dragged percentage from the border
+- (void)swipeTableViewCell:(MCSwipeTableViewCell *)cell didSwipeWithPercentage:(CGFloat)percentage {
+    // NSLog(@"Did swipe with percentage : %f", percentage);
+}
+
 
 #pragma mark - Add Conversations
 
