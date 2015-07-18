@@ -24,11 +24,22 @@
 @implementation PeerBrowserTableViewController
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.availableUsers = [NSMutableArray new]; 
     [super viewWillAppear:YES];
+    
+    self.availableUsers = [NSMutableArray new];
     [self availableUsersForConversation];
     [self.tableView reloadData];
     [self checkEmptyTableView];
+    
+    self.browser = [DataSource sharedInstance].browser;
+    self.browser.delegate = self;
+    [self.browser startBrowsingForPeers];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:YES];
+    [self.browser stopBrowsingForPeers];
     
 }
 
@@ -36,11 +47,6 @@
     [super viewDidLoad];
     
     self.myUserID = [DataSource sharedInstance].userID;
-    self.browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.myUserID serviceType:[DataSource sharedInstance].serviceType];
-    self.browser.delegate = self;
-    [self.browser startBrowsingForPeers];
-    
-    //[self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
     self.navigationItem.title = @"Add Peers";
     self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectZero];

@@ -23,6 +23,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
+    //Reset toolbar. Fixes bug where toolbar would sit in wrong position if user left keyboard open before segue. 
+    [self.navigationController.toolbar setFrame:CGRectMake(self.navigationController.toolbar.frame.origin.x, CGRectGetMaxY(self.tableView.frame), self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height)];
+    
     [self.tableView reloadData];
     [self checkEmptyTableView];
     

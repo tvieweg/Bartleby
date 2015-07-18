@@ -48,6 +48,9 @@ NSString *const kDSServiceType = @"bartleby-chat";
         self.advertiser.delegate = self;
         [self.advertiser startAdvertisingPeer];
         
+        //initialize browser. Will be used by PeerBrowserTableViewController
+        self.browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.userID serviceType:self.serviceType];
+        
         //read active conversation data, and if there is none, initialize array.
         [self readItemsForKey:@"activeConversations"];
         [self readItemsForKey:@"archivedConversations"]; 

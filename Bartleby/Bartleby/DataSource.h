@@ -24,6 +24,7 @@
 @property (nonatomic, strong) MCPeerID *userID;
 @property (nonatomic, strong) NSString *serviceType;
 @property (retain, nonatomic) MCNearbyServiceAdvertiser *advertiser;
+@property (retain, nonatomic) MCNearbyServiceBrowser *browser; 
 
 //Used
 @property (nonatomic, strong) NSMutableArray *availablePeers;

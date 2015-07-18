@@ -30,6 +30,9 @@
 @property (retain, nonatomic) IBOutlet UITextField *messageComposeTextField;
 // Button for executing the message send.
 @property (retain, nonatomic) IBOutlet UIBarButtonItem *sendMessageButton;
+//hide keyboard when user touches outside view.
+@property (weak, nonatomic) UIGestureRecognizer *hideKeyboardTapGestureRecognizer;
+
 
 @end
 
@@ -50,12 +53,19 @@
         [DataSource sharedInstance].isNewConversation = NO;
         [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
     }
+    
+    //Gesture Recognizer
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] init];
+    self.hideKeyboardTapGestureRecognizer = tap;
+    [self.hideKeyboardTapGestureRecognizer addTarget:self action:@selector(tapGestureDidFire:)];
+    [self.view addGestureRecognizer:tap];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     _transcripts = [NSMutableArray new];
+    
     // Listen for will show/hide notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -64,9 +74,9 @@
     self.sessionContainer.delegate = self;
     
     self.transcripts = self.sessionContainer.sessionTranscripts;
-
+    
     [self updateViewTitle];
-    [self.tableView reloadData]; 
+    [self.tableView reloadData];
     
 }
 
@@ -91,20 +101,6 @@
     }
 }
 
-- (void) updateViewTitle {
-    self.displayName = [DataSource sharedInstance].currentConversation.displayName;
-    
-    //TODO this does not work after view has loaded. Why?
-
-    if (self.displayName == nil) {
-        self.title = @"New Conversation";
-    } else {
-        self.title = self.displayName;
-        [self.navigationController reloadInputViews];
-        
-    }
-    
-}
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -112,8 +108,16 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.sessionContainer.delegate = nil;
-    [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts; 
+    [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts;
 }
+
+#pragma mark - TapGestureRecognizer
+
+- (void)tapGestureDidFire:(UITapGestureRecognizer *)sender {
+    [self.messageComposeTextField resignFirstResponder];
+    
+}
+
 
 #pragma mark - SessionContainerDelegate
 
@@ -171,6 +175,17 @@
     NSUInteger numberOfRows = [self.tableView numberOfRowsInSection:0];
     if (numberOfRows) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(numberOfRows - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+}
+
+- (void) updateViewTitle {
+    self.displayName = [DataSource sharedInstance].currentConversation.displayName;
+    
+    if (self.displayName == nil) {
+        self.title = @"New Conversation";
+    } else {
+        self.title = self.displayName;
+        [self.navigationController reloadInputViews];
     }
 }
 
@@ -404,15 +419,16 @@
 #pragma mark - misc.
 
 - (void) addPeers {
-    
     [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
-
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {    
     [self addPeers];
     
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [self textFieldDidEndEditing:self.messageComposeTextField]; 
 }
 
 @end
