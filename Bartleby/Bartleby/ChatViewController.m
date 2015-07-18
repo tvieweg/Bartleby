@@ -30,6 +30,9 @@
 @property (retain, nonatomic) IBOutlet UITextField *messageComposeTextField;
 // Button for executing the message send.
 @property (retain, nonatomic) IBOutlet UIBarButtonItem *sendMessageButton;
+// Button to add photos.
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *photoButton;
+
 //hide keyboard when user touches outside view.
 @property (weak, nonatomic) UIGestureRecognizer *hideKeyboardTapGestureRecognizer;
 
@@ -53,6 +56,8 @@
         [DataSource sharedInstance].isNewConversation = NO;
         [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
     }
+    
+    [self.tableView setContentInset:UIEdgeInsetsMake(0,0,50,0)];
     
     //Gesture Recognizer
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] init];
@@ -101,6 +106,13 @@
     }
 }
 
+- (void) viewWillLayoutSubviews {
+    
+    float messageFieldWidth = self.navigationController.navigationBar.frame.size.width - self.sendMessageButton.width - self.photoButton.width - 110;
+    
+    self.messageComposeTextField.frame = CGRectMake(self.messageComposeTextField.frame.origin.x, self.messageComposeTextField.frame.origin.y, messageFieldWidth, self.messageComposeTextField.frame.size.height);
+
+}
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -109,6 +121,19 @@
     
     self.sessionContainer.delegate = nil;
     [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts;
+    [self textFieldDidEndEditing:self.messageComposeTextField];
+
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator]; 
+    NSString *messageText = self.messageComposeTextField.text;
+    
+    [self.messageComposeTextField resignFirstResponder];
+    
+    self.messageComposeTextField.text = messageText;
+    
+    //how to bring keyboard back without a "didRotate" function?
 }
 
 #pragma mark - TapGestureRecognizer
@@ -181,11 +206,13 @@
 - (void) updateViewTitle {
     self.displayName = [DataSource sharedInstance].currentConversation.displayName;
     
-    if (self.displayName == nil) {
+    if ([self.displayName isEqualToString:[DataSource sharedInstance].userID.displayName]) {
+        //This is a new conversation with no added peers.
         self.title = @"New Conversation";
     } else {
+        //This is an existing conversation
         self.title = self.displayName;
-        [self.navigationController reloadInputViews];
+        [self.navigationController.navigationBar reloadInputViews];
     }
 }
 
@@ -403,7 +430,17 @@
     [UIView setAnimationCurve:animationCurve];
 
     [self.navigationController.toolbar setFrame:CGRectMake(self.navigationController.toolbar.frame.origin.x, self.navigationController.toolbar.frame.origin.y + (keyboardFrame.size.height * (up ? -1 : 1)), self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height)];
+    
+    [self.tableView setFrame:CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height + (keyboardFrame.size.height * (up ? -1 : 1)))];
+    
+    // Scroll to the bottom so we focus on the latest message
+    NSUInteger numberOfRows = [self.tableView numberOfRowsInSection:0];
+    if (numberOfRows) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(numberOfRows - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+
     [UIView commitAnimations];
+    
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {
@@ -416,19 +453,16 @@
     [self moveToolBarUp:NO forKeyboardNotification:notification];
 }
 
-#pragma mark - misc.
+#pragma mark - addPeers
 
-- (void) addPeers {
-    [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
-}
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {    
     [self addPeers];
     
 }
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [self textFieldDidEndEditing:self.messageComposeTextField]; 
+- (void) addPeers {
+    [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
 }
 
 @end

@@ -201,7 +201,7 @@
         [[DataSource sharedInstance].activeConversations insertObject:sessionToMoveToActive atIndex:0];
         [[DataSource sharedInstance].archivedConversations removeObject:sessionToMoveToActive];
         
-        NSLog(@"Count of archived conversations is now %lu", [DataSource sharedInstance].archivedConversations.count); 
+        NSLog(@"Count of archived conversations is now %lu", (unsigned long)[DataSource sharedInstance].archivedConversations.count); 
     }
 
 

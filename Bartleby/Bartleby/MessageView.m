@@ -141,8 +141,8 @@
     
     if (TRANSCRIPT_DIRECTION_SEND == transcript.direction) {
         // Sent messages appear or right of view
-        xOffsetLabel = 320 - labelSize.width - (BALLOON_WIDTH_PADDING / 2) - 3;
-        xOffsetBalloon = 320 - balloonSize.width;
+        xOffsetLabel = self.superview.frame.size.width - labelSize.width - (BALLOON_WIDTH_PADDING / 2) - 6;
+        xOffsetBalloon = self.superview.frame.size.width - balloonSize.width - 3;
         yOffset = BUFFER_WHITE_SPACE / 2;
         _nameLabel.text = @"";
         // Set text color

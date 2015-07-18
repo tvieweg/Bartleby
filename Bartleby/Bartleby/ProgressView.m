@@ -112,7 +112,7 @@
 
     if (TRANSCRIPT_DIRECTION_SEND == transcript.direction) {
         // Sent images appear or right of view
-        xOffset = 320 - PADDING_X - PROGRESS_VIEW_WIDTH;
+        xOffset = self.superview.frame.size.width - PADDING_X - PROGRESS_VIEW_WIDTH;
         yOffset = BUFFER_WHITE_SPACE / 2;
         _displayNameLabel.text = @"";
     }
