@@ -30,6 +30,7 @@
 		69CFCE351B52EA960014207A /* bubble-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE321B52EA960014207A /* bubble-left@2x.png */; };
 		69CFCE361B52EA960014207A /* bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE331B52EA960014207A /* bubble-right@2x.png */; };
 		69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE341B52EA960014207A /* PhotoButton@2x.png */; };
+		B183D4891B59CEE1009E1861 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B183D4881B59CEE1009E1861 /* AudioToolbox.framework */; };
 		B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */; };
 		B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1DF6EF61B58B487007CC7BB /* MCSwipeTableViewCell.m */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,7 @@
 		69CFCE321B52EA960014207A /* bubble-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-left@2x.png"; sourceTree = "<group>"; };
 		69CFCE331B52EA960014207A /* bubble-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-right@2x.png"; sourceTree = "<group>"; };
 		69CFCE341B52EA960014207A /* PhotoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PhotoButton@2x.png"; sourceTree = "<group>"; };
+		B183D4881B59CEE1009E1861 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B193B4EC1B5433C200C5F4F8 /* PeerBrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerBrowserTableViewController.h; sourceTree = "<group>"; };
 		B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeerBrowserTableViewController.m; sourceTree = "<group>"; };
 		B1DF6EF51B58B487007CC7BB /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B183D4891B59CEE1009E1861 /* AudioToolbox.framework in Frameworks */,
 				69CFCE2A1B5194B10014207A /* Foundation.framework in Frameworks */,
 				69CFCE281B5194A80014207A /* CoreGraphics.framework in Frameworks */,
 				69CFCE261B51947D0014207A /* UIKit.framework in Frameworks */,
@@ -177,6 +180,7 @@
 		69CFCE311B52DBA90014207A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B183D4881B59CEE1009E1861 /* AudioToolbox.framework */,
 				69CFCE291B5194B10014207A /* Foundation.framework */,
 				69CFCE271B5194A80014207A /* CoreGraphics.framework */,
 				69CFCE251B51947D0014207A /* UIKit.framework */,
