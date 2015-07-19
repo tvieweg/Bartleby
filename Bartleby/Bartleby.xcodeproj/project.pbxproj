@@ -28,7 +28,6 @@
 		69CFCE2D1B5196110014207A /* DataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE2C1B5196110014207A /* DataSource.m */; };
 		69CFCE301B51965B0014207A /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE2F1B51965B0014207A /* User.m */; };
 		69CFCE351B52EA960014207A /* bubble-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE321B52EA960014207A /* bubble-left@2x.png */; };
-		69CFCE361B52EA960014207A /* bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE331B52EA960014207A /* bubble-right@2x.png */; };
 		69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE341B52EA960014207A /* PhotoButton@2x.png */; };
 		B183D4891B59CEE1009E1861 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B183D4881B59CEE1009E1861 /* AudioToolbox.framework */; };
 		B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */; };
@@ -82,7 +81,6 @@
 		69CFCE2E1B51965B0014207A /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		69CFCE2F1B51965B0014207A /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		69CFCE321B52EA960014207A /* bubble-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-left@2x.png"; sourceTree = "<group>"; };
-		69CFCE331B52EA960014207A /* bubble-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-right@2x.png"; sourceTree = "<group>"; };
 		69CFCE341B52EA960014207A /* PhotoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PhotoButton@2x.png"; sourceTree = "<group>"; };
 		B183D4881B59CEE1009E1861 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B193B4EC1B5433C200C5F4F8 /* PeerBrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerBrowserTableViewController.h; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 			isa = PBXGroup;
 			children = (
 				69CFCE321B52EA960014207A /* bubble-left@2x.png */,
-				69CFCE331B52EA960014207A /* bubble-right@2x.png */,
 				69CFCE341B52EA960014207A /* PhotoButton@2x.png */,
 				69CFCDE11B5192AB0014207A /* Info.plist */,
 				69CFCDE21B5192AB0014207A /* main.m */,
@@ -318,7 +315,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */,
-				69CFCE361B52EA960014207A /* bubble-right@2x.png in Resources */,
 				69CFCE351B52EA960014207A /* bubble-left@2x.png in Resources */,
 				69CFCDF11B5192AB0014207A /* LaunchScreen.xib in Resources */,
 				69CFCE1A1B51934C0014207A /* MainStoryboard_iPhone.storyboard in Resources */,

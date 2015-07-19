@@ -56,6 +56,14 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didPressDone)];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didPressCancel)];
+    
+    UIColor *navigationBarColor = [UIColor whiteColor];
+    UIColor *textColor = [UIColor blackColor];
+    
+    self.navBar.barTintColor = navigationBarColor;
+    self.navBar.tintColor = textColor;
+    self.navBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+
 
 }
 

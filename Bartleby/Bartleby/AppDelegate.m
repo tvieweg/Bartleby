@@ -22,7 +22,7 @@
     
     [DataSource sharedInstance];
     
-    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     //Local notifications
      UIUserNotificationType types =
      UIUserNotificationTypeSound | UIUserNotificationTypeAlert;

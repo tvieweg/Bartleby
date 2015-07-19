@@ -54,7 +54,7 @@
 
 // Constants for view sizing and alignment
 #define MESSAGE_FONT_SIZE       (17.0)
-#define NAME_FONT_SIZE          (10.0)
+#define NAME_FONT_SIZE          (12.0)
 #define BUFFER_WHITE_SPACE      (14.0)
 #define DETAIL_TEXT_LABEL_WIDTH (220.0)
 #define NAME_OFFSET_ADJUST      (4.0)
@@ -156,13 +156,15 @@
         xOffsetLabel = (BALLOON_WIDTH_PADDING / 2) + 3;
         yOffset = (BUFFER_WHITE_SPACE / 2) + nameSize.height - NAME_OFFSET_ADJUST;
         if (TRANSCRIPT_DIRECTION_LOCAL == transcript.direction) {
-            _nameLabel.text = @"Session Admin";
+            _nameLabel.text = @"Bartleby";
         }
         else {
             _nameLabel.text = nameText;
         }
         // Set text color
-        _messageLabel.textColor = [UIColor darkTextColor];
+        _messageLabel.textColor = [UIColor whiteColor];
+        _nameLabel.textColor = [UIColor whiteColor];
+        _nameLabel.font = [UIFont boldSystemFontOfSize:12];
         // Set resizeable image
         _balloonView.image = [self.balloonImageLeft resizableImageWithCapInsets:_balloonInsetsLeft];
     }

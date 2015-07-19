@@ -26,6 +26,7 @@
     //Reset toolbar. Fixes bug where toolbar would sit in wrong position if user left keyboard open before segue. 
     [self.navigationController.toolbar setFrame:CGRectMake(self.navigationController.toolbar.frame.origin.x, CGRectGetMaxY(self.tableView.frame), self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height)];
     
+    
     [self.tableView reloadData];
     [self checkEmptyTableView];
     
@@ -37,7 +38,21 @@
     //Register for KVO on active conversations.
     [[DataSource sharedInstance] addObserver:self forKeyPath:@"activeConversations" options:0 context:nil];
     
+    
+    UIColor *navigationBarColor = [UIColor whiteColor];
+    UIColor *textColor = [UIColor blackColor];
+    
+    self.navigationController.navigationBar.barTintColor = navigationBarColor;
+    self.navigationController.toolbar.barTintColor = navigationBarColor;
+    self.navigationController.navigationBar.tintColor = textColor;
+    self.navigationController.toolbar.tintColor = textColor;
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+    
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didPressAddConversation)];
+    
+
+
 }
 
 

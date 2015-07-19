@@ -64,7 +64,12 @@
     self.hideKeyboardTapGestureRecognizer = tap;
     [self.hideKeyboardTapGestureRecognizer addTarget:self action:@selector(tapGestureDidFire:)];
     [self.view addGestureRecognizer:tap];
-
+    
+    self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -260,6 +265,9 @@
         // Set up the message view for this transcript
         messageView.transcript = transcript;
     }
+    
+    cell.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    
     return cell;
 }
 
