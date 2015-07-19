@@ -13,6 +13,7 @@
 #import "SessionContainer.h"
 #import "PeerBrowserTableViewController.h"
 #import "MCSwipeTableViewCell.h"
+#import "Transcript.h"
 
 @interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate, MCSwipeTableViewCellDelegate>
 
@@ -25,8 +26,7 @@
     
     //Reset toolbar. Fixes bug where toolbar would sit in wrong position if user left keyboard open before segue. 
     [self.navigationController.toolbar setFrame:CGRectMake(self.navigationController.toolbar.frame.origin.x, CGRectGetMaxY(self.tableView.frame), self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height)];
-    
-    
+
     [self.tableView reloadData];
     [self checkEmptyTableView];
     
@@ -48,11 +48,14 @@
     self.navigationController.toolbar.tintColor = textColor;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
     
+    self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; 
+
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didPressAddConversation)];
     
-
-
+    [self.tableView reloadData]; 
 }
 
 
@@ -72,31 +75,22 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"conversationCell";
+    static NSString *cellIdentifier = @"cell";
 
-    MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (!cell) {
-        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        
-        // iOS 7 separator
-        if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
-            cell.separatorInset = UIEdgeInsetsZero;
-        }
-        
-        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
-        cell.contentView.backgroundColor = [UIColor whiteColor];
-    }
-    
-    [self configureCell:cell forRowAtIndexPath:indexPath];
+    MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     SessionContainer *conversation = [DataSource sharedInstance].activeConversations[indexPath.row];
+
+    [self configureCell:cell forRowAtIndexPath:indexPath];
+
+    cell.conversationLabel.text = conversation.displayName;
+    Transcript *lastMessage = [conversation.sessionTranscripts lastObject];
     
-    cell.textLabel.text = conversation.displayName;
-    
-    //cell.layer.cornerRadius = 10;
-    //cell.layer.masksToBounds = YES;
-    //cell.backgroundColor = [UIColor whiteColor];
+    if (lastMessage.message != nil) {
+        cell.conversationPreview.text = lastMessage.message;
+    } else {
+        cell.conversationPreview.text = @"";
+    }
     
     return cell;
 }
@@ -166,6 +160,7 @@
         nothingLabel.text = NSLocalizedString(@"No conversations here. Start a new one by hitting the + above!", nil);
         nothingLabel.textAlignment = NSTextAlignmentCenter;
         nothingLabel.numberOfLines = 0;
+        nothingLabel.textColor = [UIColor whiteColor]; 
         
         self.tableView.backgroundView = nothingLabel;
         self.tableView.separatorColor = [UIColor clearColor];
@@ -216,12 +211,12 @@
             kindOfChange == NSKeyValueChangeInsertion ||
             kindOfChange == NSKeyValueChangeRemoval ||
             kindOfChange == NSKeyValueChangeReplacement) {
-
-            [self checkEmptyTableView];
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
+            [self checkEmptyTableView];
+            
+            
 
             
         }

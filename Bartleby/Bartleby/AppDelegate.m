@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DataSource.h"
+#import "ConversationViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface AppDelegate ()
@@ -42,6 +43,11 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    
+    if ([DataSource sharedInstance].activeConversations.count > 0) {
+        [[DataSource sharedInstance] replaceObjectInActiveConversationsAtIndex:0 withObject:[DataSource sharedInstance].activeConversations[0]];
+    }
+
     
 }
 

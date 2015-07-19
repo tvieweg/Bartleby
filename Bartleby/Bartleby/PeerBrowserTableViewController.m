@@ -11,6 +11,7 @@
 #import "PeerBrowserTableViewController.h"
 #import "SessionContainer.h"
 #import "DataSource.h"
+#import "PeerBrowserCell.h"
 
 @interface PeerBrowserTableViewController () <MCNearbyServiceBrowserDelegate>
 
@@ -63,6 +64,9 @@
     self.navBar.barTintColor = navigationBarColor;
     self.navBar.tintColor = textColor;
     self.navBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+    
+    self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
 
 }
@@ -80,6 +84,7 @@
         nothingLabel.text = @"No one's around! Try moving locations or wait a while";
         nothingLabel.textAlignment = NSTextAlignmentCenter;
         nothingLabel.numberOfLines = 0;
+        nothingLabel.textColor = [UIColor whiteColor];
         
         self.tableView.backgroundView = nothingLabel;
         self.tableView.separatorColor = [UIColor clearColor];
@@ -127,7 +132,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
     if ([cell isEqual:nil]) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+        cell = [[PeerBrowserCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                        reuseIdentifier:@"cell"];
     }
     
@@ -137,6 +142,8 @@
     cell.textLabel.text = availableUser.displayName;
     cell.detailTextLabel.text = @"Available";
     
+    cell.layer.cornerRadius = 5;
+    cell.layer.masksToBounds = YES;
     
     return cell;
 }

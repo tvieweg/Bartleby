@@ -105,6 +105,17 @@ typedef NS_ENUM(NSUInteger, MCSwipeTableViewCellDirection) {
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRecognizer:)];
     [self addGestureRecognizer:_panGestureRecognizer];
     _panGestureRecognizer.delegate = self;
+    
+    _conversationLabel = [[UILabel alloc] init];
+    _conversationPreview = [[UILabel alloc] init];
+    _conversationPreview.lineBreakMode = NSLineBreakByWordWrapping;
+    _conversationPreview.numberOfLines = 0;
+    
+    _conversationPreview.font = [UIFont systemFontOfSize:12];
+    _conversationPreview.textColor = [UIColor grayColor];
+    
+    [self addSubview:_conversationLabel];
+    [self addSubview:_conversationPreview];
 }
 
 - (void)initDefaults {
@@ -138,7 +149,11 @@ typedef NS_ENUM(NSUInteger, MCSwipeTableViewCellDirection) {
     _view2 = nil;
     _view3 = nil;
     _view4 = nil;
+    
+
+    
 }
+
 
 #pragma mark - Prepare reuse
 
@@ -150,6 +165,27 @@ typedef NS_ENUM(NSUInteger, MCSwipeTableViewCellDirection) {
 }
 
 #pragma mark - View Manipulation
+
+- (void)setFrame:(CGRect)frame {
+    
+    CGFloat horizontalInset = 10;
+    CGFloat verticalInset = 10;
+    
+    frame.origin.x += horizontalInset;
+    frame.size.width -= 2 * horizontalInset;
+    
+    frame.origin.y += verticalInset;
+    frame.size.height -= 2 *verticalInset;
+    
+    [super setFrame:frame];
+    
+    [_conversationLabel setFrame:CGRectMake(10, 25, frame.size.width - 10, 15)];
+    [_conversationPreview setFrame:CGRectMake(10, CGRectGetMaxY(_conversationLabel.frame), frame.size.width - 10, 40)];
+    
+    self.layer.cornerRadius = 5;
+    self.layer.masksToBounds = YES;
+
+}
 
 - (void)setupSwipingView {
     if (_contentScreenshotView) {

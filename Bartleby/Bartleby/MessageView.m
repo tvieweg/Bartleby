@@ -133,6 +133,7 @@
     CGSize balloonSize = [MessageView balloonSizeForLabelSize:labelSize];
     NSString *nameText = transcript.peerID.displayName;
     CGSize nameSize = [MessageView labelSizeForString:nameText fontSize:NAME_FONT_SIZE];
+    nameSize.width = DETAIL_TEXT_LABEL_WIDTH;
 
     // Comput the X,Y origin offsets
     CGFloat xOffsetLabel;
@@ -164,7 +165,7 @@
         // Set text color
         _messageLabel.textColor = [UIColor whiteColor];
         _nameLabel.textColor = [UIColor whiteColor];
-        _nameLabel.font = [UIFont boldSystemFontOfSize:12];
+        _nameLabel.font = [UIFont boldSystemFontOfSize:NAME_FONT_SIZE];
         // Set resizeable image
         _balloonView.image = [self.balloonImageLeft resizableImageWithCapInsets:_balloonInsetsLeft];
     }
