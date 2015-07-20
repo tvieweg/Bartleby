@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6934FCCA1B5C93A100066EE2 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6934FCC91B5C93A100066EE2 /* LoginViewController.m */; };
 		69CFCDE31B5192AB0014207A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE21B5192AB0014207A /* main.m */; };
 		69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE51B5192AB0014207A /* AppDelegate.m */; };
 		69CFCDEE1B5192AB0014207A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCDED1B5192AB0014207A /* Images.xcassets */; };
@@ -56,6 +57,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6934FCC81B5C93A100066EE2 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		6934FCC91B5C93A100066EE2 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		69CFCDDD1B5192AB0014207A /* Bartleby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bartleby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69CFCDE11B5192AB0014207A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69CFCDE21B5192AB0014207A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -251,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				69CFCE0C1B51934C0014207A /* MainStoryboard_iPhone.storyboard */,
+				6934FCC81B5C93A100066EE2 /* LoginViewController.h */,
+				6934FCC91B5C93A100066EE2 /* LoginViewController.m */,
 				69CFCE0D1B51934C0014207A /* MessageView.h */,
 				69CFCE0E1B51934C0014207A /* MessageView.m */,
 				69CFCE0F1B51934C0014207A /* ImageView.h */,
@@ -389,6 +394,7 @@
 				69CFCE1E1B51934C0014207A /* ChatViewController.m in Sources */,
 				69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */,
 				B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */,
+				6934FCCA1B5C93A100066EE2 /* LoginViewController.m in Sources */,
 				69CFCE1C1B51934C0014207A /* ImageView.m in Sources */,
 				B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */,
 				69CFCE301B51965B0014207A /* User.m in Sources */,
