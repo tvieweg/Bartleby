@@ -10,6 +10,7 @@
 #import "DataSource.h"
 #import "ConversationViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import <Parse/Parse.h>
 
 @interface AppDelegate ()
 
@@ -23,7 +24,18 @@
     
     [DataSource sharedInstance];
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    // [Optional] Power your app with Local Datastore. For more info, go to
+    // https://parse.com/docs/ios_guide#localdatastore/iOS
+    //[Parse enableLocalDatastore];
+    
+    // Initialize Parse.
+    [Parse setApplicationId:@"pTv2PI2p9Kg60D9EPVeAKDtPKzoW0Ffp8VLEt5QL"
+                  clientKey:@"AsvlxzbMi68nHbvKeHN0gqQWOWZ91OpzH0c3B9el"];
+    
+    // [Optional] Track statistics around application opens.
+    //[PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+   
     //Local notifications
      UIUserNotificationType types =
      UIUserNotificationTypeSound | UIUserNotificationTypeAlert;

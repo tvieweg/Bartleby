@@ -55,7 +55,7 @@
 
 #define PROGRESS_VIEW_HEIGHT    (15.0)
 #define PADDING_X               (15.0)
-#define NAME_FONT_SIZE          (10.0)
+#define NAME_FONT_SIZE          (12.0)
 #define BUFFER_WHITE_SPACE      (14.0)
 #define PROGRESS_VIEW_WIDTH     (140.0)
 #define PEER_NAME_HEIGHT        (12.0)
@@ -82,10 +82,11 @@
         // Initialization the sub views
         _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         _progressView.progress = 0.0;
+        _progressView.tintColor = [UIColor whiteColor]; 
 
         _displayNameLabel = [UILabel new];
-        _displayNameLabel.font = [UIFont systemFontOfSize:10.0];
-        _displayNameLabel.textColor = [UIColor colorWithRed:34.0/255.0 green:97.0/255.0 blue:221.0/255.0 alpha:1];
+        _displayNameLabel.font = [UIFont boldSystemFontOfSize:NAME_FONT_SIZE];
+        _displayNameLabel.textColor = [UIColor whiteColor];
 
         // Add to parent view
         [self addSubview:_displayNameLabel];
@@ -105,6 +106,8 @@
     // Compute name size
     NSString *nameText = transcript.peerID.displayName;
     CGSize nameSize = [ProgressView labelSizeForString:nameText fontSize:NAME_FONT_SIZE];
+    nameSize.width = 220;
+
 
     // Comput the X,Y origin offsets
     CGFloat xOffset;

@@ -54,7 +54,7 @@
 
 #define IMAGE_VIEW_HEIGHT_MAX   (140.0)
 #define IMAGE_PADDING_X         (15.0)
-#define NAME_FONT_SIZE          (10.0)
+#define NAME_FONT_SIZE          (12.0)
 #define BUFFER_WHITE_SPACE      (14.0)
 #define DETAIL_TEXT_LABEL_WIDTH (220.0)
 #define PEER_NAME_HEIGHT        (12.0)
@@ -81,11 +81,11 @@
         _imageView.layer.cornerRadius = 5.0;
         _imageView.layer.masksToBounds = YES;
         _imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        _imageView.layer.borderWidth = 0.5;
+        _imageView.layer.borderWidth = 0;
 
         _nameLabel = [UILabel new];
-        _nameLabel.font = [UIFont systemFontOfSize:10.0];
-        _nameLabel.textColor = [UIColor colorWithRed:34.0/255.0 green:97.0/255.0 blue:221.0/255.0 alpha:1];
+        _nameLabel.font = [UIFont boldSystemFontOfSize:NAME_FONT_SIZE];
+        _nameLabel.textColor = [UIColor whiteColor];
 
         // Add to parent view
         [self addSubview:_imageView];
@@ -115,6 +115,8 @@
     // Compute name size
     NSString *nameText = transcript.peerID.displayName;
     CGSize nameSize = [ImageView labelSizeForString:nameText fontSize:NAME_FONT_SIZE];
+    nameSize.width = DETAIL_TEXT_LABEL_WIDTH;
+
 
     // Comput the X,Y origin offsets
     CGFloat xOffsetBalloon;

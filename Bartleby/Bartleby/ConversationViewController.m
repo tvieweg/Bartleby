@@ -35,6 +35,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    /*PARSE TEST CODE
+    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
+    testObject[@"foo"] = @"bar";
+    [testObject saveInBackground];
+     */
+    
     //Register for KVO on active conversations.
     [[DataSource sharedInstance] addObserver:self forKeyPath:@"activeConversations" options:0 context:nil];
     
