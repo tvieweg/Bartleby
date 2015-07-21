@@ -49,22 +49,8 @@ NSString *const kDSServiceType = @"bartleby-chat";
         [self.advertiser startAdvertisingPeer];
         
         //read active conversation data, and if there is none, initialize array.
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSString *fullPath = [self pathForFilename:NSStringFromSelector(@selector(activeConversations))];
-            NSArray *storedActiveConversations = [NSKeyedUnarchiver unarchiveObjectWithFile:fullPath];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (storedActiveConversations.count > 0) {
-                    NSMutableArray *mutableActiveConversations = [storedActiveConversations mutableCopy];
-                    
-                    [self willChangeValueForKey:@"activeConversations"];
-                    self.activeConversations = mutableActiveConversations;
-                    [self didChangeValueForKey:@"activeConversations"];
-                } else {
-                    self.activeConversations = [NSMutableArray new];
-                }
-            });
-        });
+        [self readItemsForKey:@"activeConversations"];
+        [self readItemsForKey:@"archivedConversations"]; 
 
         //Used by ConversationViewController to tell ChatViewController when user is creating a new conversation.
         self.isNewConversation = NO;
@@ -72,6 +58,27 @@ NSString *const kDSServiceType = @"bartleby-chat";
     }
     
     return self;
+}
+
+- (void) readItemsForKey:(NSString *)key {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *fullPath = [self pathForFilename:key];
+        NSArray *storedConversationsForSelector = [NSKeyedUnarchiver unarchiveObjectWithFile:fullPath];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (storedConversationsForSelector.count > 0) {
+                NSMutableArray *mutableConversationsForSelector = [storedConversationsForSelector mutableCopy];
+                
+                [self willChangeValueForKey:key];
+                [self setValue:mutableConversationsForSelector forKey:key];
+                [self didChangeValueForKey:key];
+                
+            } else {
+                [self setValue:[NSMutableArray new] forKey:key];
+            }
+        });
+    });
+
 }
 
 #pragma mark - Session Creation
@@ -110,7 +117,8 @@ NSString *const kDSServiceType = @"bartleby-chat";
     
     BOOL accept = (buttonIndex != alertView.cancelButtonIndex) ? YES : NO;
     void (^invitationHandler)(BOOL, MCSession *) = [self.invitationHandler objectAtIndex:0];
-
+    
+    //check new session against existing sessions. If one already exists, replace it. If not, create new session.
     for (SessionContainer *activeConversation in self.activeConversations) {
         if ([activeConversation.displayName isEqualToString:self.invitationPeer.displayName]) {
             
@@ -119,7 +127,19 @@ NSString *const kDSServiceType = @"bartleby-chat";
             noPreviousConversation = NO;
         }
     }
-    //ASK STEVE ABOUT POINTERS.
+    
+    for (SessionContainer *archivedConversation in self.archivedConversations) {
+        if ([archivedConversation.displayName isEqualToString:self.invitationPeer.displayName]) {
+            
+            [self.activeConversations insertObject:archivedConversation atIndex:0];
+            [self.archivedConversations removeObject:archivedConversation];
+            invitationHandler(accept, archivedConversation.session);
+            
+            noPreviousConversation = NO;
+        }
+
+    }
+    
     if (noPreviousConversation) {
         
         SessionContainer *newSession = [[DataSource sharedInstance] createNewSessionWithPeerID:self.invitationPeer];
@@ -127,8 +147,7 @@ NSString *const kDSServiceType = @"bartleby-chat";
         invitationHandler(accept, newSession.session);
         
     }
-    
-    //check new session against existing sessions. If one already exists, replace it. If not, create new session.
+
 
 }
 
@@ -194,15 +213,30 @@ NSString *const kDSServiceType = @"bartleby-chat";
         NSArray *activeConversationsToSave = [self.activeConversations subarrayWithRange:NSMakeRange(0, numberOfItemsToSave)];
         
         NSString *fullPath = [self pathForFilename:NSStringFromSelector(@selector(activeConversations))];
-        NSData *mediaItemData = [NSKeyedArchiver archivedDataWithRootObject:activeConversationsToSave];
+        NSData *activeConversationData = [NSKeyedArchiver archivedDataWithRootObject:activeConversationsToSave];
         
         NSError *dataError;
-        BOOL wroteSuccessfully = [mediaItemData writeToFile:fullPath options:NSDataWritingAtomic | NSDataWritingFileProtectionCompleteUnlessOpen error:&dataError];
+        BOOL wroteSuccessfully = [activeConversationData writeToFile:fullPath options:NSDataWritingAtomic | NSDataWritingFileProtectionCompleteUnlessOpen error:&dataError];
         
         if (!wroteSuccessfully) {
             NSLog(@"Couldn't write file: %@", dataError);
         }
     });
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray *archivedConversationsToSave = self.archivedConversations;
+        
+        NSString *fullPath = [self pathForFilename:NSStringFromSelector(@selector(archivedConversations))];
+        NSData *archivedConversationData = [NSKeyedArchiver archivedDataWithRootObject:archivedConversationsToSave];
+        
+        NSError *dataError;
+        BOOL wroteSuccessfully = [archivedConversationData writeToFile:fullPath options:NSDataWritingAtomic | NSDataWritingFileProtectionCompleteUnlessOpen error:&dataError];
+        
+        if (!wroteSuccessfully) {
+            NSLog(@"Couldn't write file: %@", dataError);
+        }
+    });
+
 }
 
 @end

@@ -31,6 +31,7 @@
 		69CFCE361B52EA960014207A /* bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE331B52EA960014207A /* bubble-right@2x.png */; };
 		69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE341B52EA960014207A /* PhotoButton@2x.png */; };
 		B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */; };
+		B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1DF6EF61B58B487007CC7BB /* MCSwipeTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,8 @@
 		69CFCE341B52EA960014207A /* PhotoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PhotoButton@2x.png"; sourceTree = "<group>"; };
 		B193B4EC1B5433C200C5F4F8 /* PeerBrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerBrowserTableViewController.h; sourceTree = "<group>"; };
 		B193B4ED1B5433C200C5F4F8 /* PeerBrowserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeerBrowserTableViewController.m; sourceTree = "<group>"; };
+		B1DF6EF51B58B487007CC7BB /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
+		B1DF6EF61B58B487007CC7BB /* MCSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSwipeTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,13 +206,15 @@
 		B193B4E41B54292200C5F4F8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				69CFCE0C1B51934C0014207A /* MainStoryboard_iPhone.storyboard */,
 				69CFCE0D1B51934C0014207A /* MessageView.h */,
 				69CFCE0E1B51934C0014207A /* MessageView.m */,
 				69CFCE0F1B51934C0014207A /* ImageView.h */,
 				69CFCE101B51934C0014207A /* ImageView.m */,
 				69CFCE111B51934C0014207A /* ProgressView.h */,
 				69CFCE121B51934C0014207A /* ProgressView.m */,
-				69CFCE0C1B51934C0014207A /* MainStoryboard_iPhone.storyboard */,
+				B1DF6EF51B58B487007CC7BB /* MCSwipeTableViewCell.h */,
+				B1DF6EF61B58B487007CC7BB /* MCSwipeTableViewCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -339,6 +344,7 @@
 				69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */,
 				B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */,
 				69CFCE1C1B51934C0014207A /* ImageView.m in Sources */,
+				B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */,
 				69CFCE301B51965B0014207A /* User.m in Sources */,
 				69CFCE1B1B51934C0014207A /* MessageView.m in Sources */,
 				69CFCE221B5194540014207A /* ConversationViewController.m in Sources */,

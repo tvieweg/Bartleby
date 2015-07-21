@@ -29,6 +29,7 @@
 @property (nonatomic, strong) NSMutableArray *availablePeers;
 
 @property (nonatomic, strong) NSMutableArray *activeConversations;
+@property (nonatomic, strong) NSMutableArray *archivedConversations; 
 
 @property (nonatomic, assign) BOOL isNewConversation; 
 
