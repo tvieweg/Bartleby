@@ -141,13 +141,26 @@
         if (self.delegate != nil) {
             [self.delegate session:self peerDidConnect:peerID];
         }
-
     }
     
     // Notify the delegate that we have received a new chunk of data from a peer
     if (self.delegate != nil) {
         [self.delegate receivedTranscript:transcript];
+    } else {
+        //Local notification when not in chat view. Phone vibrates (see App Delegate)
+        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+        
+        localNotif.timeZone = [NSTimeZone defaultTimeZone];
+        
+        localNotif.alertTitle = [NSString stringWithFormat:@"%@", transcript.peerID.displayName];
+        localNotif.alertAction = NSLocalizedString(@"View", nil);
+        localNotif.alertBody = [NSString stringWithFormat:@"%@", transcript.message];
+        
+        localNotif.soundName = UILocalNotificationDefaultSoundName;
+        
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
     }
+
 }
 
 // MCSession Delegate callback when receiving data from a peer in a given session
@@ -163,7 +176,21 @@
         [self.delegate receivedTranscript:transcript];
     } else {
         //The delegate is not available and we need to add this transcript to our datasource.
-        [self.sessionTranscripts addObject:transcript]; 
+        [self.sessionTranscripts addObject:transcript];
+
+        //Local notification when not in chat view. Phone vibrates (see App Delegate)
+        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+        
+        localNotif.timeZone = [NSTimeZone defaultTimeZone];
+        
+        localNotif.alertTitle = [NSString stringWithFormat:@"%@", transcript.peerID.displayName];
+        localNotif.alertAction = NSLocalizedString(@"View", nil);
+        localNotif.alertBody = [NSString stringWithFormat:@"%@", transcript.message];
+        
+        localNotif.soundName = UILocalNotificationDefaultSoundName;
+        
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+
     }
     
 }
