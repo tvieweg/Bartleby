@@ -30,6 +30,12 @@
 @property (retain, nonatomic) IBOutlet UITextField *messageComposeTextField;
 // Button for executing the message send.
 @property (retain, nonatomic) IBOutlet UIBarButtonItem *sendMessageButton;
+// Button to add photos.
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *photoButton;
+
+//hide keyboard when user touches outside view.
+@property (weak, nonatomic) UIGestureRecognizer *hideKeyboardTapGestureRecognizer;
+
 
 @end
 
@@ -50,12 +56,26 @@
         [DataSource sharedInstance].isNewConversation = NO;
         [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
     }
-
+    
+    [self.tableView setContentInset:UIEdgeInsetsMake(0,0,50,0)];
+    
+    //Gesture Recognizer
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] init];
+    self.hideKeyboardTapGestureRecognizer = tap;
+    [self.hideKeyboardTapGestureRecognizer addTarget:self action:@selector(tapGestureDidFire:)];
+    [self.view addGestureRecognizer:tap];
+    
+    self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     _transcripts = [NSMutableArray new];
+    
     // Listen for will show/hide notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -64,9 +84,9 @@
     self.sessionContainer.delegate = self;
     
     self.transcripts = self.sessionContainer.sessionTranscripts;
-
+    
     [self updateViewTitle];
-    [self.tableView reloadData]; 
+    [self.tableView reloadData];
     
 }
 
@@ -91,19 +111,12 @@
     }
 }
 
-- (void) updateViewTitle {
-    self.displayName = [DataSource sharedInstance].currentConversation.displayName;
+- (void) viewWillLayoutSubviews {
     
-    //TODO this does not work after view has loaded. Why?
+    float messageFieldWidth = self.navigationController.navigationBar.frame.size.width - self.sendMessageButton.width - self.photoButton.width - 110;
+    
+    self.messageComposeTextField.frame = CGRectMake(self.messageComposeTextField.frame.origin.x, self.messageComposeTextField.frame.origin.y, messageFieldWidth, self.messageComposeTextField.frame.size.height);
 
-    if (self.displayName == nil) {
-        self.title = @"New Conversation";
-    } else {
-        self.title = self.displayName;
-        [self.navigationController reloadInputViews];
-        
-    }
-    
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -112,8 +125,29 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.sessionContainer.delegate = nil;
-    [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts; 
+    [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts;
+    [self textFieldDidEndEditing:self.messageComposeTextField];
+
 }
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator]; 
+    NSString *messageText = self.messageComposeTextField.text;
+    
+    [self.messageComposeTextField resignFirstResponder];
+    
+    self.messageComposeTextField.text = messageText;
+    
+    //how to bring keyboard back without a "didRotate" function?
+}
+
+#pragma mark - TapGestureRecognizer
+
+- (void)tapGestureDidFire:(UITapGestureRecognizer *)sender {
+    [self.messageComposeTextField resignFirstResponder];
+    
+}
+
 
 #pragma mark - SessionContainerDelegate
 
@@ -174,6 +208,19 @@
     }
 }
 
+- (void) updateViewTitle {
+    self.displayName = [DataSource sharedInstance].currentConversation.displayName;
+    
+    if ([self.displayName isEqualToString:[DataSource sharedInstance].userID.displayName]) {
+        //This is a new conversation with no added peers.
+        self.title = @"New Conversation";
+    } else {
+        //This is an existing conversation
+        self.title = self.displayName;
+        [self.navigationController.navigationBar reloadInputViews];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -218,6 +265,9 @@
         // Set up the message view for this transcript
         messageView.transcript = transcript;
     }
+    
+    cell.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    
     return cell;
 }
 
@@ -388,7 +438,17 @@
     [UIView setAnimationCurve:animationCurve];
 
     [self.navigationController.toolbar setFrame:CGRectMake(self.navigationController.toolbar.frame.origin.x, self.navigationController.toolbar.frame.origin.y + (keyboardFrame.size.height * (up ? -1 : 1)), self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height)];
+    
+    [self.tableView setFrame:CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height + (keyboardFrame.size.height * (up ? -1 : 1)))];
+    
+    // Scroll to the bottom so we focus on the latest message
+    NSUInteger numberOfRows = [self.tableView numberOfRowsInSection:0];
+    if (numberOfRows) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(numberOfRows - 1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+
     [UIView commitAnimations];
+    
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {
@@ -401,18 +461,16 @@
     [self moveToolBarUp:NO forKeyboardNotification:notification];
 }
 
-#pragma mark - misc.
+#pragma mark - addPeers
 
-- (void) addPeers {
-    
-    [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
 
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {    
     [self addPeers];
     
+}
+
+- (void) addPeers {
+    [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
 }
 
 @end

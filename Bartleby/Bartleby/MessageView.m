@@ -54,7 +54,7 @@
 
 // Constants for view sizing and alignment
 #define MESSAGE_FONT_SIZE       (17.0)
-#define NAME_FONT_SIZE          (10.0)
+#define NAME_FONT_SIZE          (12.0)
 #define BUFFER_WHITE_SPACE      (14.0)
 #define DETAIL_TEXT_LABEL_WIDTH (220.0)
 #define NAME_OFFSET_ADJUST      (4.0)
@@ -133,6 +133,7 @@
     CGSize balloonSize = [MessageView balloonSizeForLabelSize:labelSize];
     NSString *nameText = transcript.peerID.displayName;
     CGSize nameSize = [MessageView labelSizeForString:nameText fontSize:NAME_FONT_SIZE];
+    nameSize.width = DETAIL_TEXT_LABEL_WIDTH;
 
     // Comput the X,Y origin offsets
     CGFloat xOffsetLabel;
@@ -141,8 +142,8 @@
     
     if (TRANSCRIPT_DIRECTION_SEND == transcript.direction) {
         // Sent messages appear or right of view
-        xOffsetLabel = 320 - labelSize.width - (BALLOON_WIDTH_PADDING / 2) - 3;
-        xOffsetBalloon = 320 - balloonSize.width;
+        xOffsetLabel = self.superview.frame.size.width - labelSize.width - (BALLOON_WIDTH_PADDING / 2) - 6;
+        xOffsetBalloon = self.superview.frame.size.width - balloonSize.width - 3;
         yOffset = BUFFER_WHITE_SPACE / 2;
         _nameLabel.text = @"";
         // Set text color
@@ -156,13 +157,15 @@
         xOffsetLabel = (BALLOON_WIDTH_PADDING / 2) + 3;
         yOffset = (BUFFER_WHITE_SPACE / 2) + nameSize.height - NAME_OFFSET_ADJUST;
         if (TRANSCRIPT_DIRECTION_LOCAL == transcript.direction) {
-            _nameLabel.text = @"Session Admin";
+            _nameLabel.text = @"Bartleby";
         }
         else {
             _nameLabel.text = nameText;
         }
         // Set text color
-        _messageLabel.textColor = [UIColor darkTextColor];
+        _messageLabel.textColor = [UIColor whiteColor];
+        _nameLabel.textColor = [UIColor whiteColor];
+        _nameLabel.font = [UIFont boldSystemFontOfSize:NAME_FONT_SIZE];
         // Set resizeable image
         _balloonView.image = [self.balloonImageLeft resizableImageWithCapInsets:_balloonInsetsLeft];
     }

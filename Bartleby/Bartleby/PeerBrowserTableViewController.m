@@ -11,6 +11,7 @@
 #import "PeerBrowserTableViewController.h"
 #import "SessionContainer.h"
 #import "DataSource.h"
+#import "PeerBrowserCell.h"
 
 @interface PeerBrowserTableViewController () <MCNearbyServiceBrowserDelegate>
 
@@ -24,11 +25,22 @@
 @implementation PeerBrowserTableViewController
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.availableUsers = [NSMutableArray new]; 
     [super viewWillAppear:YES];
+    
+    self.availableUsers = [NSMutableArray new];
     [self availableUsersForConversation];
     [self.tableView reloadData];
     [self checkEmptyTableView];
+    
+    self.browser = [DataSource sharedInstance].browser;
+    self.browser.delegate = self;
+    [self.browser startBrowsingForPeers];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:YES];
+    [self.browser stopBrowsingForPeers];
     
 }
 
@@ -36,11 +48,6 @@
     [super viewDidLoad];
     
     self.myUserID = [DataSource sharedInstance].userID;
-    self.browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.myUserID serviceType:[DataSource sharedInstance].serviceType];
-    self.browser.delegate = self;
-    [self.browser startBrowsingForPeers];
-    
-    //[self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     
     self.navigationItem.title = @"Add Peers";
     self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectZero];
@@ -50,6 +57,17 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didPressDone)];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didPressCancel)];
+    
+    UIColor *navigationBarColor = [UIColor whiteColor];
+    UIColor *textColor = [UIColor blackColor];
+    
+    self.navBar.barTintColor = navigationBarColor;
+    self.navBar.tintColor = textColor;
+    self.navBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
+    
+    self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
 
 }
 
@@ -66,6 +84,7 @@
         nothingLabel.text = @"No one's around! Try moving locations or wait a while";
         nothingLabel.textAlignment = NSTextAlignmentCenter;
         nothingLabel.numberOfLines = 0;
+        nothingLabel.textColor = [UIColor whiteColor];
         
         self.tableView.backgroundView = nothingLabel;
         self.tableView.separatorColor = [UIColor clearColor];
@@ -113,7 +132,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
     if ([cell isEqual:nil]) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+        cell = [[PeerBrowserCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                        reuseIdentifier:@"cell"];
     }
     
@@ -123,6 +142,8 @@
     cell.textLabel.text = availableUser.displayName;
     cell.detailTextLabel.text = @"Available";
     
+    cell.layer.cornerRadius = 5;
+    cell.layer.masksToBounds = YES;
     
     return cell;
 }
@@ -195,7 +216,7 @@
         [[DataSource sharedInstance].activeConversations insertObject:sessionToMoveToActive atIndex:0];
         [[DataSource sharedInstance].archivedConversations removeObject:sessionToMoveToActive];
         
-        NSLog(@"Count of archived conversations is now %lu", [DataSource sharedInstance].archivedConversations.count); 
+        NSLog(@"Count of archived conversations is now %lu", (unsigned long)[DataSource sharedInstance].archivedConversations.count); 
     }
 
 

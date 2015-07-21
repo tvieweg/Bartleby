@@ -174,6 +174,9 @@ typedef void (^MCSwipeCompletionBlock)(MCSwipeTableViewCell *cell, MCSwipeTableV
  */
 - (void)swipeToOriginWithCompletion:(void(^)(void))completion;
 
+@property UILabel *conversationLabel;
+@property UILabel *conversationPreview;
+
 @end
 
 
