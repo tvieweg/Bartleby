@@ -98,6 +98,7 @@
 - (void)setTranscript:(Transcript *)transcript
 {
     // Load the image the specificed resource URL points to.
+    
     UIImage *image = [UIImage imageWithContentsOfFile:[transcript.imageUrl path]];
     _imageView.image = image;
 

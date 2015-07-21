@@ -8,6 +8,7 @@
 
 #import "DataSource.h"
 #import "SessionContainer.h"
+#import <Parse/Parse.h>
 
 NSString *const kDSServiceType = @"bartleby-chat";
 
@@ -29,6 +30,7 @@ NSString *const kDSServiceType = @"bartleby-chat";
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
     });
+    
     return sharedInstance;
 }
 
@@ -39,7 +41,8 @@ NSString *const kDSServiceType = @"bartleby-chat";
         
         //set userID and service type.
         self.serviceType = kDSServiceType;
-        self.userID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
+        
+        [self getUserIDandProfilePicture];
         
         self.availablePeers = [NSMutableArray new];
 
@@ -52,8 +55,7 @@ NSString *const kDSServiceType = @"bartleby-chat";
         self.browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.userID serviceType:self.serviceType];
         
         //read active conversation data, and if there is none, initialize array.
-        [self readItemsForKey:@"activeConversations"];
-        [self readItemsForKey:@"archivedConversations"]; 
+        [self getStoredConversations];
 
         //Used by ConversationViewController to tell ChatViewController when user is creating a new conversation.
         self.isNewConversation = NO;
@@ -61,6 +63,26 @@ NSString *const kDSServiceType = @"bartleby-chat";
     }
     
     return self;
+}
+
+- (void) getStoredConversations {
+    [self readItemsForKey:@"activeConversations"];
+    [self readItemsForKey:@"archivedConversations"];
+}
+
+- (void) getUserIDandProfilePicture {
+    if ([PFUser currentUser]) {
+        self.userID = [[MCPeerID alloc] initWithDisplayName:[PFUser currentUser].username];
+        PFFile *userProfilePicture = [PFUser currentUser][@"profilePicture"];
+        [userProfilePicture getDataInBackgroundWithBlock:^(NSData *imageData, NSError *error) {
+            if (imageData && !error) {
+                self.userProfilePicture = [UIImage imageWithData:imageData];
+            } else {
+                self.userProfilePicture = nil; 
+            }
+        }];
+
+    }
 }
 
 - (void) readItemsForKey:(NSString *)key {
@@ -205,6 +227,8 @@ NSString *const kDSServiceType = @"bartleby-chat";
 - (NSString *) pathForFilename:(NSString *) filename {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths firstObject];
+    filename = [filename stringByAppendingString:self.userID.displayName];
+    NSLog(@"%@", filename);
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:filename];
     return dataPath;
 }

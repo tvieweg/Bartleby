@@ -11,6 +11,7 @@
 #import "ConversationViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <Parse/Parse.h>
+#import <ParseCrashReporting/ParseCrashReporting.h>
 
 @interface AppDelegate ()
 
@@ -22,20 +23,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    [DataSource sharedInstance];
-    
-    // [Optional] Power your app with Local Datastore. For more info, go to
-    // https://parse.com/docs/ios_guide#localdatastore/iOS
-    //[Parse enableLocalDatastore];
+    // Enable Crash Reporting
+    [ParseCrashReporting enable];
     
     // Initialize Parse.
     [Parse setApplicationId:@"pTv2PI2p9Kg60D9EPVeAKDtPKzoW0Ffp8VLEt5QL"
                   clientKey:@"AsvlxzbMi68nHbvKeHN0gqQWOWZ91OpzH0c3B9el"];
     
     // [Optional] Track statistics around application opens.
-    //[PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-   
     //Local notifications
      UIUserNotificationType types =
      UIUserNotificationTypeSound | UIUserNotificationTypeAlert;

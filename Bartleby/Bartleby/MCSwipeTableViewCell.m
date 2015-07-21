@@ -179,7 +179,7 @@ typedef NS_ENUM(NSUInteger, MCSwipeTableViewCellDirection) {
     
     [super setFrame:frame];
     
-    [_conversationLabel setFrame:CGRectMake(10, 25, frame.size.width - 10, 15)];
+    [_conversationLabel setFrame:CGRectMake(10, 25, frame.size.width - 10, 18)];
     [_conversationPreview setFrame:CGRectMake(10, CGRectGetMaxY(_conversationLabel.frame), frame.size.width - 10, 40)];
     
     self.layer.cornerRadius = 5;

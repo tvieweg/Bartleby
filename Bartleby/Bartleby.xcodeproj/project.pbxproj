@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6934FCCA1B5C93A100066EE2 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6934FCC91B5C93A100066EE2 /* LoginViewController.m */; };
 		69CFCDE31B5192AB0014207A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE21B5192AB0014207A /* main.m */; };
 		69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCDE51B5192AB0014207A /* AppDelegate.m */; };
 		69CFCDEE1B5192AB0014207A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCDED1B5192AB0014207A /* Images.xcassets */; };
@@ -26,7 +27,6 @@
 		69CFCE281B5194A80014207A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CFCE271B5194A80014207A /* CoreGraphics.framework */; };
 		69CFCE2A1B5194B10014207A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CFCE291B5194B10014207A /* Foundation.framework */; };
 		69CFCE2D1B5196110014207A /* DataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE2C1B5196110014207A /* DataSource.m */; };
-		69CFCE301B51965B0014207A /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE2F1B51965B0014207A /* User.m */; };
 		69CFCE351B52EA960014207A /* bubble-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE321B52EA960014207A /* bubble-left@2x.png */; };
 		69CFCE371B52EA960014207A /* PhotoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69CFCE341B52EA960014207A /* PhotoButton@2x.png */; };
 		B13C9D611B5B74A400A504A9 /* PeerBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B13C9D601B5B74A400A504A9 /* PeerBrowserCell.m */; };
@@ -42,6 +42,9 @@
 		B1BF23781B5C443A00234454 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B1BF23771B5C443A00234454 /* libz.dylib */; };
 		B1BF237A1B5C444800234454 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B1BF23791B5C444800234454 /* libsqlite3.dylib */; };
 		B1BF237C1B5C446200234454 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1BF237B1B5C446200234454 /* CoreLocation.framework */; };
+		B1BF23811B5D549200234454 /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1BF23801B5D549200234454 /* ParseCrashReporting.framework */; };
+		B1BF23831B5D54E500234454 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B1BF23821B5D54E500234454 /* libstdc++.6.dylib */; };
+		B1BF23871B5D85B900234454 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1BF23861B5D85B900234454 /* ProfileViewController.m */; };
 		B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1DF6EF61B58B487007CC7BB /* MCSwipeTableViewCell.m */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +59,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6934FCC81B5C93A100066EE2 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		6934FCC91B5C93A100066EE2 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		69CFCDDD1B5192AB0014207A /* Bartleby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bartleby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69CFCDE11B5192AB0014207A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69CFCDE21B5192AB0014207A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -89,8 +94,6 @@
 		69CFCE291B5194B10014207A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		69CFCE2B1B5196110014207A /* DataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSource.h; sourceTree = "<group>"; };
 		69CFCE2C1B5196110014207A /* DataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSource.m; sourceTree = "<group>"; };
-		69CFCE2E1B51965B0014207A /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		69CFCE2F1B51965B0014207A /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		69CFCE321B52EA960014207A /* bubble-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-left@2x.png"; sourceTree = "<group>"; };
 		69CFCE341B52EA960014207A /* PhotoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PhotoButton@2x.png"; sourceTree = "<group>"; };
 		B13C9D5F1B5B74A400A504A9 /* PeerBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeerBrowserCell.h; sourceTree = "<group>"; };
@@ -108,6 +111,10 @@
 		B1BF23771B5C443A00234454 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B1BF23791B5C444800234454 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		B1BF237B1B5C446200234454 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		B1BF23801B5D549200234454 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseCrashReporting.framework; sourceTree = "<group>"; };
+		B1BF23821B5D54E500234454 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
+		B1BF23851B5D85B900234454 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		B1BF23861B5D85B900234454 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		B1DF6EF51B58B487007CC7BB /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
 		B1DF6EF61B58B487007CC7BB /* MCSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSwipeTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,12 +133,14 @@
 				B1BF23741B5C442700234454 /* StoreKit.framework in Frameworks */,
 				B1BF23761B5C443300234454 /* SystemConfiguration.framework in Frameworks */,
 				B1BF23781B5C443A00234454 /* libz.dylib in Frameworks */,
+				B1BF23831B5D54E500234454 /* libstdc++.6.dylib in Frameworks */,
 				B1BF237A1B5C444800234454 /* libsqlite3.dylib in Frameworks */,
 				69CFCE2A1B5194B10014207A /* Foundation.framework in Frameworks */,
 				B1BF236C1B5C42D900234454 /* Parse.framework in Frameworks */,
 				B1BF236B1B5C42D900234454 /* Bolts.framework in Frameworks */,
 				69CFCE261B51947D0014207A /* UIKit.framework in Frameworks */,
 				69CFCE241B5194770014207A /* MultipeerConnectivity.framework in Frameworks */,
+				B1BF23811B5D549200234454 /* ParseCrashReporting.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,6 +219,8 @@
 		69CFCE311B52DBA90014207A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B1BF23821B5D54E500234454 /* libstdc++.6.dylib */,
+				B1BF23801B5D549200234454 /* ParseCrashReporting.framework */,
 				B1BF237B1B5C446200234454 /* CoreLocation.framework */,
 				B1BF23791B5C444800234454 /* libsqlite3.dylib */,
 				B1BF23771B5C443A00234454 /* libz.dylib */,
@@ -233,8 +244,6 @@
 		B193B4E31B54291A00C5F4F8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				69CFCE2E1B51965B0014207A /* User.h */,
-				69CFCE2F1B51965B0014207A /* User.m */,
 				69CFCE061B51934C0014207A /* SessionContainer.h */,
 				69CFCE071B51934C0014207A /* SessionContainer.m */,
 				69CFCE081B51934C0014207A /* Transcript.h */,
@@ -268,6 +277,10 @@
 		B193B4E51B54292C00C5F4F8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				B1BF23851B5D85B900234454 /* ProfileViewController.h */,
+				B1BF23861B5D85B900234454 /* ProfileViewController.m */,
+				6934FCC81B5C93A100066EE2 /* LoginViewController.h */,
+				6934FCC91B5C93A100066EE2 /* LoginViewController.m */,
 				69CFCE201B5194540014207A /* ConversationViewController.h */,
 				69CFCE211B5194540014207A /* ConversationViewController.m */,
 				69CFCE131B51934C0014207A /* ChatViewController.h */,
@@ -288,6 +301,7 @@
 				69CFCDD91B5192AB0014207A /* Sources */,
 				69CFCDDA1B5192AB0014207A /* Frameworks */,
 				69CFCDDB1B5192AB0014207A /* Resources */,
+				B1BF23841B5D5A1E00234454 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -376,6 +390,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B1BF23841B5D5A1E00234454 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=/usr/local/bin:$PATH\ncd /Users/TV/Desktop/Bloc_Projects/Bartleby\n\nparse symbols -p \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		69CFCDD91B5192AB0014207A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -383,15 +413,16 @@
 			files = (
 				69CFCE171B51934C0014207A /* SessionContainer.m in Sources */,
 				B13C9D611B5B74A400A504A9 /* PeerBrowserCell.m in Sources */,
+				B1BF23871B5D85B900234454 /* ProfileViewController.m in Sources */,
 				69CFCE181B51934C0014207A /* Transcript.m in Sources */,
 				69CFCE1D1B51934C0014207A /* ProgressView.m in Sources */,
 				69CFCE2D1B5196110014207A /* DataSource.m in Sources */,
 				69CFCE1E1B51934C0014207A /* ChatViewController.m in Sources */,
 				69CFCDE61B5192AB0014207A /* AppDelegate.m in Sources */,
 				B193B4EE1B5433C200C5F4F8 /* PeerBrowserTableViewController.m in Sources */,
+				6934FCCA1B5C93A100066EE2 /* LoginViewController.m in Sources */,
 				69CFCE1C1B51934C0014207A /* ImageView.m in Sources */,
 				B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */,
-				69CFCE301B51965B0014207A /* User.m in Sources */,
 				69CFCE1B1B51934C0014207A /* MessageView.m in Sources */,
 				69CFCE221B5194540014207A /* ConversationViewController.m in Sources */,
 				69CFCE191B51934C0014207A /* ProgressObserver.m in Sources */,
