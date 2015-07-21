@@ -22,11 +22,12 @@
 
 //user ID, service type and advertiser set at initialization
 @property (nonatomic, strong) MCPeerID *userID;
+@property (nonatomic, strong) UIImage *userProfilePicture; 
 @property (nonatomic, strong) NSString *serviceType;
 @property (retain, nonatomic) MCNearbyServiceAdvertiser *advertiser;
 @property (retain, nonatomic) MCNearbyServiceBrowser *browser; 
 
-//Used
+//Used to store available peers.
 @property (nonatomic, strong) NSMutableArray *availablePeers;
 
 @property (nonatomic, strong) NSMutableArray *activeConversations;
@@ -40,8 +41,10 @@
 @property (nonatomic, strong) SessionContainer *ConvWithInitialConnectionInProgress;
 
 + (instancetype) sharedInstance;
-
+- (void) getUserIDandProfilePicture;
 - (SessionContainer *) createNewSessionWithPeerID:(MCPeerID *)peerID;
+- (void) getStoredConversations; 
+
 
 //Save active conversations property to disk. Use whenever activeConversations is updated. 
 - (void) saveConversationsToDisk;

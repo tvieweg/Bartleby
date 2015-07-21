@@ -24,22 +24,29 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
+    if (![PFUser currentUser]) {
+        [self.navigationController popToRootViewControllerAnimated:YES]; 
+    }
+    
+    //Start datasource if not previously loaded.
+    [DataSource sharedInstance];
+    
     //Reset toolbar. Fixes bug where toolbar would sit in wrong position if user left keyboard open before segue. 
     [self.navigationController.toolbar setFrame:CGRectMake(self.navigationController.toolbar.frame.origin.x, CGRectGetMaxY(self.tableView.frame), self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height)];
 
     [self.tableView reloadData];
     [self checkEmptyTableView];
     
+    self.navigationItem.hidesBackButton = YES;
+    self.navigationController.navigationBarHidden = NO;
+    self.navigationController.toolbarHidden = NO;
+
+
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    /*PARSE TEST CODE
-    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
-    testObject[@"foo"] = @"bar";
-    [testObject saveInBackground];
-     */
     
     //Register for KVO on active conversations.
     [[DataSource sharedInstance] addObserver:self forKeyPath:@"activeConversations" options:0 context:nil];
@@ -60,6 +67,8 @@
 
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(didPressAddConversation)];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"user"] style:UIBarButtonItemStylePlain target:self action:@selector(didPressProfileButton)];
     
     [self.tableView reloadData]; 
 }
@@ -207,6 +216,10 @@
 
 }
 
+- (void) didPressProfileButton {
+    [self performSegueWithIdentifier:@"showProfile" sender:self]; 
+}
+
 #pragma mark - KVO
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -230,8 +243,11 @@
 }
 
 - (void) dealloc {
-    
-    [[DataSource sharedInstance] removeObserver:self forKeyPath:@"activeConversations"];
+    @try{
+        [[DataSource sharedInstance] removeObserver:self forKeyPath:@"activeConversations"];
+    }@catch(id exception){
+        return;
+    }
     
 }
 

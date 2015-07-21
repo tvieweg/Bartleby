@@ -7,6 +7,8 @@
 //
 
 #import "LoginViewController.h"
+#import "ConversationViewController.h"
+#import "DataSource.h"
 #import <Parse/Parse.h>
 
 @interface LoginViewController () <UIAlertViewDelegate>
@@ -31,10 +33,23 @@
 
 @implementation LoginViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    _password.text = @"";
+
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:YES]; 
+    if ([PFUser currentUser] != nil) {
+        [self performSegueWithIdentifier:@"goToConversationView" sender:self];
+    }
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+
     _activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     _activityIndicator.center = self.view.center;
     _activityIndicator.hidesWhenStopped = YES;
@@ -42,12 +57,17 @@
     
     [self.view addSubview:_activityIndicator];
     
+    _password.secureTextEntry = YES; 
+    
+    self.navigationController.navigationBarHidden = YES;
+    self.navigationController.toolbarHidden = YES; 
+    
     _signupActive = YES;
     
 }
 
 
-#pragma mark - helper functions
+#pragma mark - helper methods
 
 - (void) displayErrorAlertWithTitle:(NSString *)title andError:(NSString *)errorString {
     
@@ -58,6 +78,8 @@
                                              otherButtonTitles: nil];
     [alert show];
 }
+
+#pragma mark - IBAction methods 
 
 //helper function to set labels/button titles based on whether user is signing up or logging in.
 - (IBAction)toggleLoginOrSignup:(id)sender {
@@ -103,7 +125,7 @@
     } else {
         //Data is valid. Send to Parse. Show activity spinner while running.
         
-
+        //Start progress spinner
         [_activityIndicator startAnimating];
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
@@ -125,6 +147,8 @@
                 if (!error) {
                     
                     NSLog(@"Signed up!");
+                    [[DataSource sharedInstance] getUserIDandProfilePicture];                                             [[DataSource sharedInstance] getStoredConversations];
+
                     [self performSegueWithIdentifier:@"goToConversationView" sender:self];
                     
                 } else {
@@ -138,11 +162,17 @@
         //user is on login page.
         } else {
             
+            //stop progress spinner
+            [_activityIndicator stopAnimating];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
             [PFUser logInWithUsernameInBackground:_username.text password:_password.text
                                             block:^(PFUser *user, NSError *error) {
                                                 if (user) {
                                                     
                                                     NSLog(@"Logged in!");
+                                                    [[DataSource sharedInstance] getUserIDandProfilePicture];
+                                                    [[DataSource sharedInstance] getStoredConversations];
                                                     [self performSegueWithIdentifier:@"goToConversationView" sender:self];
                                                     
                                                 } else {
@@ -156,15 +186,8 @@
         }
     }
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+
 
 
 @end
