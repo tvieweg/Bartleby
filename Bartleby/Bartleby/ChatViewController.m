@@ -32,10 +32,8 @@
 @property (retain, nonatomic) IBOutlet UIBarButtonItem *sendMessageButton;
 // Button to add photos.
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *photoButton;
-
 //hide keyboard when user touches outside view.
 @property (weak, nonatomic) UIGestureRecognizer *hideKeyboardTapGestureRecognizer;
-
 
 @end
 
@@ -52,12 +50,11 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addPeers)];
     
+    //If this is a new conversation, show the peer view browser once loaded.
     if ([DataSource sharedInstance].isNewConversation) {
         [DataSource sharedInstance].isNewConversation = NO;
         [self performSegueWithIdentifier:@"showPeerBrowser" sender:self];
     }
-    
-    [self.tableView setContentInset:UIEdgeInsetsMake(0,0,50,0)];
     
     //Gesture Recognizer
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] init];
@@ -68,21 +65,20 @@
     self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     _transcripts = [NSMutableArray new];
     
     // Listen for will show/hide notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
+    //Load the session container for this conversation and set the delegate.
     self.sessionContainer = [DataSource sharedInstance].currentConversation;
     self.sessionContainer.delegate = self;
-    
     self.transcripts = self.sessionContainer.sessionTranscripts;
     
     [self updateViewTitle];
@@ -96,7 +92,6 @@
     if (self.sessionContainer.session.connectedPeers.count == 0 && self.sessionContainer.peersConnectedToSession.count > 0) {
         
         //People were previously connected and now are not. Alert user.
-        
         NSString *message = NSLocalizedString(@"Looks like all users have been disconnected. Reconnect using the + button above.", @"Reconnect with users description");
         Transcript *lastMessage = [self.transcripts lastObject];
         
@@ -124,8 +119,11 @@
     // Stop listening for keyboard notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    //Remove delegate and add transcripts to the session container.
     self.sessionContainer.delegate = nil;
     [DataSource sharedInstance].currentConversation.sessionTranscripts = self.transcripts;
+    
+    //Close keyboard before segue
     [self textFieldDidEndEditing:self.messageComposeTextField];
 
 }
@@ -137,8 +135,6 @@
     [self.messageComposeTextField resignFirstResponder];
     
     self.messageComposeTextField.text = messageText;
-    
-    //how to bring keyboard back without a "didRotate" function?
 }
 
 #pragma mark - TapGestureRecognizer
@@ -176,7 +172,7 @@
 }
 
 - (void)session:(SessionContainer *)session peerDidConnect:(MCPeerID *)peer {
-
+    //Update conversation view once peer is connected.
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateViewTitle];
     });
@@ -188,7 +184,7 @@
 // Make sure you call this on the main thread
 - (void)insertTranscript:(Transcript *)transcript
 {
-    // Add to the data source
+    // Add transcript to the data source
     [_transcripts addObject:transcript];
 
     // If this is a progress transcript add it's index to the map with image name as the key
@@ -373,7 +369,6 @@
     });
 }
 
-
 #pragma mark - UITextFieldDelegate methods
 
 // Override to dynamically enable/disable the send button based on user typing
@@ -463,10 +458,8 @@
 
 #pragma mark - addPeers
 
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {    
     [self addPeers];
-    
 }
 
 - (void) addPeers {

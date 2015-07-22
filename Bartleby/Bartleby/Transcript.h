@@ -28,7 +28,7 @@ typedef enum {
 // Resource Image name (optional)
 @property (readonly, nonatomic) NSString *imageName;
 // Resource Image URL (optional)
-@property (readonly, nonatomic) NSURL *imageUrl;
+@property (strong, nonatomic) NSURL *imageUrl;
 // Resource name (optional)
 @property (readonly, nonatomic) NSProgress *progress;
 

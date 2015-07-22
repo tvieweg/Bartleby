@@ -19,7 +19,6 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
@@ -36,9 +35,7 @@
     //Local notifications
      UIUserNotificationType types =
      UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
-     
      UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-     
      [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
     
     return YES;
@@ -56,11 +53,7 @@
     if ([DataSource sharedInstance].activeConversations.count > 0) {
         [[DataSource sharedInstance] replaceObjectInActiveConversationsAtIndex:0 withObject:[DataSource sharedInstance].activeConversations[0]];
     }
-
-    
 }
-
-
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
@@ -78,9 +71,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    
     [[DataSource sharedInstance] saveConversationsToDisk];
-
 }
 
 @end

@@ -219,11 +219,11 @@
 		69CFCE311B52DBA90014207A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B1BF23791B5C444800234454 /* libsqlite3.dylib */,
+				B1BF23771B5C443A00234454 /* libz.dylib */,
 				B1BF23821B5D54E500234454 /* libstdc++.6.dylib */,
 				B1BF23801B5D549200234454 /* ParseCrashReporting.framework */,
 				B1BF237B1B5C446200234454 /* CoreLocation.framework */,
-				B1BF23791B5C444800234454 /* libsqlite3.dylib */,
-				B1BF23771B5C443A00234454 /* libz.dylib */,
 				B1BF23751B5C443300234454 /* SystemConfiguration.framework */,
 				B1BF23731B5C442700234454 /* StoreKit.framework */,
 				B1BF23711B5C441F00234454 /* Security.framework */,
@@ -277,12 +277,12 @@
 		B193B4E51B54292C00C5F4F8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B1BF23851B5D85B900234454 /* ProfileViewController.h */,
-				B1BF23861B5D85B900234454 /* ProfileViewController.m */,
 				6934FCC81B5C93A100066EE2 /* LoginViewController.h */,
 				6934FCC91B5C93A100066EE2 /* LoginViewController.m */,
 				69CFCE201B5194540014207A /* ConversationViewController.h */,
 				69CFCE211B5194540014207A /* ConversationViewController.m */,
+				B1BF23851B5D85B900234454 /* ProfileViewController.h */,
+				B1BF23861B5D85B900234454 /* ProfileViewController.m */,
 				69CFCE131B51934C0014207A /* ChatViewController.h */,
 				69CFCE141B51934C0014207A /* ChatViewController.m */,
 				B193B4EC1B5433C200C5F4F8 /* PeerBrowserTableViewController.h */,

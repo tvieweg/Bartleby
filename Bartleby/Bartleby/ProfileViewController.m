@@ -68,10 +68,7 @@
     
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+#pragma mark - button methods
 
 - (void) didPressDone {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -86,6 +83,8 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - helper methods
+
 - (void) displayErrorAlertWithTitle:(NSString *)title andError:(NSString *)errorString {
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
@@ -95,6 +94,8 @@
                                           otherButtonTitles: nil];
     [alert show];
 }
+
+#pragma mark - profile picture changes
 
 - (IBAction)changeProfilePicture:(id)sender {
 

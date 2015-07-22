@@ -16,11 +16,11 @@
 
 // Container utility class for managing MCSession state, API calls, and it's delegate callbacks
 @interface SessionContainer : NSObject <NSCoding, MCSessionDelegate>
-
 @property (nonatomic, assign) id <SessionContainerDelegate> delegate;
-
 @property (nonatomic, readonly) MCSession *session;
+//Save transcripts locally.
 @property (nonatomic, strong) NSMutableArray *sessionTranscripts;
+//User display names.
 @property (nonatomic, strong) NSString *displayName;
 //Used to track any peers that have ever been connected to the session.
 @property (nonatomic, strong) NSMutableArray *peersConnectedToSession;

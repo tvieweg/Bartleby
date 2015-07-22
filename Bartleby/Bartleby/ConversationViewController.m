@@ -24,6 +24,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
+    //Check each time conversation view is loaded. Ensures if user presses logout they are taken to login page.
     if (![PFUser currentUser]) {
         [self.navigationController popToRootViewControllerAnimated:YES]; 
     }
@@ -40,9 +41,6 @@
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.toolbarHidden = NO;
-
-
-    
 }
 
 - (void)viewDidLoad {
@@ -51,7 +49,7 @@
     //Register for KVO on active conversations.
     [[DataSource sharedInstance] addObserver:self forKeyPath:@"activeConversations" options:0 context:nil];
     
-    
+    //Navigation controller properties.
     UIColor *navigationBarColor = [UIColor whiteColor];
     UIColor *textColor = [UIColor blackColor];
     
@@ -61,8 +59,8 @@
     self.navigationController.toolbar.tintColor = textColor;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
     
+    //Set tableview properties.
     self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
-    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; 
 
 
@@ -83,7 +81,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-
     return [DataSource sharedInstance].activeConversations.count;
 }
 
@@ -91,7 +88,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *cellIdentifier = @"cell";
-
     MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     SessionContainer *conversation = [DataSource sharedInstance].activeConversations[indexPath.row];
@@ -99,6 +95,8 @@
     [self configureCell:cell forRowAtIndexPath:indexPath];
 
     cell.conversationLabel.text = conversation.displayName;
+    
+    //Update transcript to last message. This is updated via KVO when new transcripts are sent.
     Transcript *lastMessage = [conversation.sessionTranscripts lastObject];
     
     if (lastMessage.message != nil) {
@@ -125,8 +123,6 @@
     
     [cell setSwipeGestureWithView:listView color:blueColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
         
-        NSLog(@"Did swipe \"list\" cell");
-        
         //move conversation to archive and update table view.
         SessionContainer *archiveConversation = [[DataSource sharedInstance].activeConversations objectAtIndex:indexPath.row];
         [[DataSource sharedInstance].archivedConversations addObject:archiveConversation];
@@ -135,28 +131,17 @@
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self checkEmptyTableView];
         
-        NSLog(@"Count of archived conversations is now %lu", (unsigned long)[DataSource sharedInstance].archivedConversations.count);
     }];
     
     [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-        NSLog(@"Did swipe \"cross\" cell");
+        
+        //Delete the conversation.
         [[DataSource sharedInstance].activeConversations removeObjectAtIndex:indexPath.row];
-        
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
         [self checkEmptyTableView];
 
     }];
 }
-
-
-- (UIView *)viewWithImageName:(NSString *)imageName {
-    UIImage *image = [UIImage imageNamed:imageName];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.contentMode = UIViewContentModeCenter;
-    return imageView;
-}
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [DataSource sharedInstance].currentConversation = [DataSource sharedInstance].activeConversations[indexPath.row];
@@ -166,6 +151,8 @@
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
+
+#pragma mark - Helper functions
 
 //Helper function to set table to single message if empty.
 - (void) checkEmptyTableView {
@@ -185,6 +172,15 @@
         self.tableView.separatorColor = [UIColor grayColor];
     }
 }
+
+//Helper for images in swipe table view cells.
+- (UIView *)viewWithImageName:(NSString *)imageName {
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.contentMode = UIViewContentModeCenter;
+    return imageView;
+}
+
 
 #pragma mark - MCSwipeTableViewCellDelegate
 
@@ -235,9 +231,6 @@
             });
             [self checkEmptyTableView];
             
-            
-
-            
         }
     }
 }
@@ -248,7 +241,6 @@
     }@catch(id exception){
         return;
     }
-    
 }
 
 @end
