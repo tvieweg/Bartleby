@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Trevor Vieweg. All rights reserved.
 //
 
-
 @import MultipeerConnectivity;
 
 #import "SessionContainer.h"
@@ -215,9 +214,7 @@
     if (error)
     {
         NSLog(@"Error [%@] receiving resource from peer %@ ", [error localizedDescription], peerID.displayName);
-    }
-    else
-    {
+    } else {
         // No error so this is a completed transfer.  The resources is located in a temporary location and should be copied to a permanent locatation immediately.
         // Write to documents directory
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -225,8 +222,7 @@
         if (![[NSFileManager defaultManager] copyItemAtPath:[localURL path] toPath:copyPath error:nil])
         {
             NSLog(@"Error copying resource to documents directory");
-        }
-        else {
+        } else {
             // Get a URL for the path we just copied the resource to
             NSURL *imageUrl = [NSURL fileURLWithPath:copyPath];
             // Create an image transcript for this received image resource
@@ -240,8 +236,7 @@
 }
 
 // Streaming API not utilized in this sample code
-- (void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID
-{
+- (void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID {
     NSLog(@"Received data over stream with name %@ from peer %@", streamName, peerID.displayName);
 }
 
@@ -258,7 +253,6 @@
         //reinitialize session
         self.session = [[MCSession alloc] initWithPeer:[DataSource sharedInstance].userID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
         self.session.delegate = self;
-        
         
     }
     

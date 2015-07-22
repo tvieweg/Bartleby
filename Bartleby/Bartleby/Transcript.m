@@ -53,7 +53,7 @@
         _direction = [aDecoder decodeIntForKey:NSStringFromSelector(@selector(direction))];
         _message = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(message))];
         _imageName = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageName))];
-        _imageUrl = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageName))];
+        _imageUrl = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageUrl))];
         
     }
     

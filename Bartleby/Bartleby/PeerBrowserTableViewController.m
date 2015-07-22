@@ -29,6 +29,7 @@
     
     self.availableUsers = [NSMutableArray new];
     [self availableUsersForConversation];
+    
     [self.tableView reloadData];
     [self checkEmptyTableView];
     
@@ -41,7 +42,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:YES];
     [self.browser stopBrowsingForPeers];
-    
 }
 
 - (void)viewDidLoad {
@@ -49,13 +49,13 @@
     
     self.myUserID = [DataSource sharedInstance].userID;
     
+    //Navigation bar properties
     self.navigationItem.title = @"Add Peers";
     self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.navBar];
     [self.navBar pushNavigationItem:self.navigationItem animated:NO];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(didPressDone)];
-    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(didPressCancel)];
     
     UIColor *navigationBarColor = [UIColor whiteColor];
@@ -65,9 +65,9 @@
     self.navBar.tintColor = textColor;
     self.navBar.titleTextAttributes = @{NSForegroundColorAttributeName : textColor};
     
+    //Table view properties
     self.tableView.backgroundColor = [UIColor colorWithRed:100/255.0 green:100/255.0 blue:120/255.0 alpha:1.0];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
 
 }
 
@@ -102,12 +102,9 @@
     return 1;
 }
 
-
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
+    //Return number of peers.
     return self.availableUsers.count;
-    
 }
 
 - (void) availableUsersForConversation {
@@ -124,7 +121,6 @@
         if (shouldIncludeUserInAvailableList) {
             [self.availableUsers insertObject:availableUser atIndex:0];
         }
-
     }
 }
 
@@ -162,7 +158,6 @@
     }
     
     if (shouldBeAdded) {
-        
         //Update model
         [[DataSource sharedInstance].availablePeers insertObject:peerID atIndex:0];
         [self availableUsersForConversation];
@@ -170,9 +165,7 @@
         //Update view
         [self.tableView reloadData];
         [self checkEmptyTableView];
-
     }
-    
 }
 
 - (void) browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID {
@@ -197,32 +190,27 @@
         if ([activeConversation.displayName isEqualToString:peerToConnect.displayName]) {
             
             [DataSource sharedInstance].currentConversation = activeConversation;
-            
         }
     }
     
     for (SessionContainer *archivedConversation in [DataSource sharedInstance].archivedConversations) {
         if ([archivedConversation.displayName isEqualToString:peerToConnect.displayName]) {
-            
             //hold session here and move after enumeration.
             sessionToMoveToActive = archivedConversation;
             [DataSource sharedInstance].currentConversation = archivedConversation;
-            
         }
-        
     }
     
     if (sessionToMoveToActive) {
         [[DataSource sharedInstance].activeConversations insertObject:sessionToMoveToActive atIndex:0];
         [[DataSource sharedInstance].archivedConversations removeObject:sessionToMoveToActive];
         
-        NSLog(@"Count of archived conversations is now %lu", (unsigned long)[DataSource sharedInstance].archivedConversations.count); 
     }
 
-
-    [self.browser invitePeer:peerToConnect toSession:[DataSource sharedInstance].currentConversation.session
-                 withContext:nil
-                     timeout:30];
+    [self.browser invitePeer:peerToConnect
+                  toSession:[DataSource sharedInstance].currentConversation.session
+                  withContext:nil
+                  timeout:30];
         
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self dismissViewControllerAnimated:YES completion:nil]; 

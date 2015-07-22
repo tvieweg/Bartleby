@@ -98,15 +98,21 @@
 - (void)setTranscript:(Transcript *)transcript
 {
     // Load the image the specificed resource URL points to.
+    NSString *imagePath = [transcript.imageUrl path];
+    UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
     
-    UIImage *image = [UIImage imageWithContentsOfFile:[transcript.imageUrl path]];
-    _imageView.image = image;
-
+    CGSize imageSize;
+    if (image) {
+        _imageView.image = image;
+        imageSize = image.size;
+    } else {
+        imageSize = CGSizeMake(10, 10);
+    }
+    
     // Get the image size and scale based on our max height (if necessary)
-    CGSize imageSize = image.size;
     CGFloat height = imageSize.height;
     CGFloat scale = 1.0;
-
+    
     // Compute scale between the original image and our max row height
     scale = (IMAGE_VIEW_HEIGHT_MAX / height);
     height = IMAGE_VIEW_HEIGHT_MAX;

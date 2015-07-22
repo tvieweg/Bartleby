@@ -7,16 +7,9 @@
 //
 
 @import MultipeerConnectivity;
-
-@class SessionContainer;
-
 #import <Foundation/Foundation.h>
 
-@protocol DataSourceDelegate <NSObject>
-
-- (void) userAcceptedNewConversationRequest; 
-
-@end
+@class SessionContainer;
 
 @interface DataSource : NSObject
 
@@ -30,11 +23,14 @@
 //Used to store available peers.
 @property (nonatomic, strong) NSMutableArray *availablePeers;
 
+//Store active and archived conversations
 @property (nonatomic, strong) NSMutableArray *activeConversations;
 @property (nonatomic, strong) NSMutableArray *archivedConversations; 
 
+//Alert view controller if this is a new conversation or existing.
 @property (nonatomic, assign) BOOL isNewConversation; 
 
+//Conversation to load when moving to chat view.
 @property (nonatomic, strong) SessionContainer *currentConversation;
 
 //Used to temporarily store conversation while connecting to session.

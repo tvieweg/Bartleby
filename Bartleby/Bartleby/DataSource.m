@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Trevor Vieweg. All rights reserved.
 //
 
+#import <Parse/Parse.h>
 #import "DataSource.h"
 #import "SessionContainer.h"
-#import <Parse/Parse.h>
 
 NSString *const kDSServiceType = @"bartleby-chat";
 
@@ -16,7 +16,7 @@ NSString *const kDSServiceType = @"bartleby-chat";
     NSMutableArray *_activeConversations;
 }
 
-//Used to store parameters when accepting invitations.
+//Used to temporarily store parameters when accepting invitations.
 @property (nonatomic, strong) NSArray *invitationHandler;
 @property (nonatomic, strong) MCPeerID *invitationPeer;
 
@@ -65,6 +65,8 @@ NSString *const kDSServiceType = @"bartleby-chat";
     return self;
 }
 
+#pragma mark - Helper Methods
+
 - (void) getStoredConversations {
     [self readItemsForKey:@"activeConversations"];
     [self readItemsForKey:@"archivedConversations"];
@@ -103,7 +105,6 @@ NSString *const kDSServiceType = @"bartleby-chat";
             }
         });
     });
-
 }
 
 #pragma mark - Session Creation
@@ -175,7 +176,6 @@ NSString *const kDSServiceType = @"bartleby-chat";
 
 
 }
-
 
 - (void) dealloc {
     [self.advertiser stopAdvertisingPeer];
@@ -263,7 +263,6 @@ NSString *const kDSServiceType = @"bartleby-chat";
             NSLog(@"Couldn't write file: %@", dataError);
         }
     });
-
 }
 
 @end

@@ -6,14 +6,16 @@
 //  Copyright (c) 2015 Trevor Vieweg. All rights reserved.
 //
 
+#import <Parse/Parse.h>
 #import "LoginViewController.h"
 #import "ConversationViewController.h"
 #import "DataSource.h"
-#import <Parse/Parse.h>
 
 @interface LoginViewController () <UIAlertViewDelegate>
 
+//boolean to determine view controller settings for signup or login.
 @property (nonatomic, assign) BOOL signupActive;
+
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator; 
 
 @property (weak, nonatomic) IBOutlet UILabel *instructions;
@@ -100,6 +102,8 @@
     }
 }
 
+#pragma mark - signup and login
+
 - (IBAction)signUp:(id)sender {
     
     NSString *error = @"";
@@ -168,26 +172,23 @@
             
             [PFUser logInWithUsernameInBackground:_username.text password:_password.text
                                             block:^(PFUser *user, NSError *error) {
-                                                if (user) {
-                                                    
-                                                    NSLog(@"Logged in!");
-                                                    [[DataSource sharedInstance] getUserIDandProfilePicture];
-                                                    [[DataSource sharedInstance] getStoredConversations];
-                                                    [self performSegueWithIdentifier:@"goToConversationView" sender:self];
-                                                    
-                                                } else {
-                                                    if ([error userInfo][@"error"]) {
-                                                        NSString *errorString = [error userInfo][@"error"];
-                                                        
-                                                        [self displayErrorAlertWithTitle:@"Login failed" andError:errorString];
-                                                    }
-                                                }
-                                            }];
+                if (user) {
+                    
+                    NSLog(@"Logged in!");
+                    [[DataSource sharedInstance] getUserIDandProfilePicture];
+                    [[DataSource sharedInstance] getStoredConversations];
+                    [self performSegueWithIdentifier:@"goToConversationView" sender:self];
+                    
+                } else {
+                    if ([error userInfo][@"error"]) {
+                        NSString *errorString = [error userInfo][@"error"];
+                        
+                        [self displayErrorAlertWithTitle:@"Login failed" andError:errorString];
+                    }
+                }
+            }];
         }
     }
 }
-
-
-
 
 @end
