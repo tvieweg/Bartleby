@@ -8,7 +8,7 @@
 
 #import <Parse/Parse.h>
 #import "LoginViewController.h"
-#import "ConversationViewController.h"
+#import "ConversationListViewController.h"
 #import "DataSource.h"
 
 @interface LoginViewController () <UIAlertViewDelegate>

@@ -1,5 +1,5 @@
 //
-//  ConversationViewController.h
+//  ConversationListViewController.h
 //  Bartleby
 //
 //  Created by Trevor Vieweg on 7/11/15.
@@ -10,7 +10,7 @@
 #import <Parse/Parse.h>
 
 
-@interface ConversationViewController : UITableViewController
+@interface ConversationListViewController : UITableViewController
 
 
 @end

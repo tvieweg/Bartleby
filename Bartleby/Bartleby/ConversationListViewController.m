@@ -1,5 +1,5 @@
 //
-//  ConversationViewController.m
+//  ConversationListViewController.m
 //  Bartleby
 //
 //  Created by Trevor Vieweg on 7/11/15.
@@ -8,18 +8,18 @@
 
 @import MultipeerConnectivity;
 
-#import "ConversationViewController.h"
+#import "ConversationListViewController.h"
 #import "DataSource.h"
 #import "SessionContainer.h"
 #import "PeerBrowserTableViewController.h"
 #import "MCSwipeTableViewCell.h"
 #import "Transcript.h"
 
-@interface ConversationViewController () <UITableViewDataSource, UITableViewDelegate, MCSwipeTableViewCellDelegate>
+@interface ConversationListViewController () <UITableViewDataSource, UITableViewDelegate, MCSwipeTableViewCellDelegate>
 
 @end
 
-@implementation ConversationViewController
+@implementation ConversationListViewController
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
