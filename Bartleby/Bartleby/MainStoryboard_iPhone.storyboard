@@ -60,7 +60,7 @@
         <!--Bartleby-->
         <scene sceneID="waX-2s-WE2">
             <objects>
-                <tableViewController id="bjH-24-ahi" customClass="ConversationViewController" sceneMemberID="viewController">
+                <tableViewController id="bjH-24-ahi" customClass="ConversationListViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="128" sectionHeaderHeight="22" sectionFooterHeight="22" id="gL1-lu-mVb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -57,7 +57,7 @@ NSString *const kDSServiceType = @"bartleby-chat";
         //read active conversation data, and if there is none, initialize array.
         [self getStoredConversations];
 
-        //Used by ConversationViewController to tell ChatViewController when user is creating a new conversation.
+        //Used by ConversationListViewController to tell ChatViewController when user is creating a new conversation.
         self.isNewConversation = NO;
         
     }

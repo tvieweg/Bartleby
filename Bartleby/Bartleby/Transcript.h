@@ -29,7 +29,9 @@ typedef enum {
 @property (readonly, nonatomic) NSString *imageName;
 // Resource Image URL (optional)
 @property (strong, nonatomic) NSURL *imageUrl;
-// Resource name (optional)
+// direct save of image.
+@property (strong, nonatomic) UIImage *image;
+// Progress (for tracking progress of sent image
 @property (readonly, nonatomic) NSProgress *progress;
 
 // Initializer used for sent/received text messages

@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DataSource.h"
-#import "ConversationViewController.h"
+#import "ConversationListViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <Parse/Parse.h>
 #import <ParseCrashReporting/ParseCrashReporting.h>

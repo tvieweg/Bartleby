@@ -22,6 +22,7 @@
         _imageUrl = imageUrl;
         _progress = progress;
         _imageName = imageName;
+        _image = nil;
     }
     return self;
 }
@@ -54,6 +55,7 @@
         _message = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(message))];
         _imageName = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageName))];
         _imageUrl = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(imageUrl))];
+        _image = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(image))];
         
     }
     
@@ -68,8 +70,8 @@
     [aCoder encodeObject:self.message forKey:NSStringFromSelector(@selector(message))];
     [aCoder encodeObject:self.imageName forKey:NSStringFromSelector(@selector(imageName))];
     [aCoder encodeObject:self.imageUrl forKey:NSStringFromSelector(@selector(imageUrl))];
+    [aCoder encodeObject:self.image forKey:NSStringFromSelector(@selector(image))];
     
 }
-
 
 @end

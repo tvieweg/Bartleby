@@ -21,7 +21,7 @@
 		69CFCE1C1B51934C0014207A /* ImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE101B51934C0014207A /* ImageView.m */; };
 		69CFCE1D1B51934C0014207A /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE121B51934C0014207A /* ProgressView.m */; };
 		69CFCE1E1B51934C0014207A /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE141B51934C0014207A /* ChatViewController.m */; };
-		69CFCE221B5194540014207A /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE211B5194540014207A /* ConversationViewController.m */; };
+		69CFCE221B5194540014207A /* ConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFCE211B5194540014207A /* ConversationListViewController.m */; };
 		69CFCE241B5194770014207A /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CFCE231B5194770014207A /* MultipeerConnectivity.framework */; };
 		69CFCE261B51947D0014207A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CFCE251B51947D0014207A /* UIKit.framework */; };
 		69CFCE281B5194A80014207A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CFCE271B5194A80014207A /* CoreGraphics.framework */; };
@@ -86,8 +86,8 @@
 		69CFCE121B51934C0014207A /* ProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressView.m; sourceTree = "<group>"; };
 		69CFCE131B51934C0014207A /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
 		69CFCE141B51934C0014207A /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
-		69CFCE201B5194540014207A /* ConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
-		69CFCE211B5194540014207A /* ConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationViewController.m; sourceTree = "<group>"; };
+		69CFCE201B5194540014207A /* ConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationListViewController.h; sourceTree = "<group>"; };
+		69CFCE211B5194540014207A /* ConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationListViewController.m; sourceTree = "<group>"; };
 		69CFCE231B5194770014207A /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
 		69CFCE251B51947D0014207A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		69CFCE271B5194A80014207A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -279,8 +279,8 @@
 			children = (
 				6934FCC81B5C93A100066EE2 /* LoginViewController.h */,
 				6934FCC91B5C93A100066EE2 /* LoginViewController.m */,
-				69CFCE201B5194540014207A /* ConversationViewController.h */,
-				69CFCE211B5194540014207A /* ConversationViewController.m */,
+				69CFCE201B5194540014207A /* ConversationListViewController.h */,
+				69CFCE211B5194540014207A /* ConversationListViewController.m */,
 				B1BF23851B5D85B900234454 /* ProfileViewController.h */,
 				B1BF23861B5D85B900234454 /* ProfileViewController.m */,
 				69CFCE131B51934C0014207A /* ChatViewController.h */,
@@ -424,7 +424,7 @@
 				69CFCE1C1B51934C0014207A /* ImageView.m in Sources */,
 				B1DF6EF71B58B487007CC7BB /* MCSwipeTableViewCell.m in Sources */,
 				69CFCE1B1B51934C0014207A /* MessageView.m in Sources */,
-				69CFCE221B5194540014207A /* ConversationViewController.m in Sources */,
+				69CFCE221B5194540014207A /* ConversationListViewController.m in Sources */,
 				69CFCE191B51934C0014207A /* ProgressObserver.m in Sources */,
 				69CFCDE31B5192AB0014207A /* main.m in Sources */,
 			);
