@@ -41,6 +41,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    //David is going to add a feature here. GIT TEST. 
+    
     self.navigationItem.title = @"Profile";
     self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,64)];
     [self.view addSubview:self.navBar];
